@@ -23,7 +23,7 @@ const Footer = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-3 col-md-12 col-sm-12 footer-widget">
-            <h5 className="widget-title">About Us</h5>
+            <h5 className="widget-title">Về chúng tôi</h5>
             <p>Sorem ipsum dolor amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
             <ul className="social-media">
               <li> <a href="#" className="facebook"> <i className="fab fa-facebook-f"></i> </a> </li>
@@ -33,17 +33,17 @@ const Footer = () => {
             </ul>
           </div>
           <div className="offset-lg-2 col-lg-3 col-md-12 col-sm-12 footer-widget">
-            <h5 className="widget-title">Quick Links</h5>
+            <h5 className="widget-title">Liên kết nhanh</h5>
             <ul>
-              <li> <a href="blog-grid.html">Latest New</a> </li>
-              <li> <a href="recipe-grid.html">Recipes</a> </li>
-              <li> <a href="shop.html">Our Products</a> </li>
-              <li> <a href="recipe-authors.html">Our Authors</a> </li>
-              <li> <a href="recipe-details">Recipe Details</a> </li>
+              <li> <a href="blog-grid.html">Tin mới nhất</a> </li>
+              <li> <a href="recipe-grid.html">Công thức nấu ăn</a> </li>
+              <li> <a href="shop.html">Sản phẩm của chúng tôi</a> </li>
+              <li> <a href="recipe-authors.html">Tác giả của chúng tôi</a> </li>
+              <li> <a href="recipe-details">Chi tiết công thức</a> </li>
             </ul>
           </div>
           <div className="offset-lg-1 col-lg-3 col-md-12 col-sm-12 footer-widget widget-recent-posts">
-            <h5 className="widget-title">Recent Recipes</h5>
+            <h5 className="widget-title">Công thức gần đây</h5>
             <article className="post">
               <a href="blog-details.html"><img src={blog1} alt="post" /></a>
               <div className="post-content">
@@ -68,7 +68,7 @@ const Footer = () => {
     <div className="metro_footer-bottom">
       <div className="container">
         <div className="metro_footer-copyright">
-          <p> Copyright © 2020 <a href="#">MetoPolitanThemes</a> All Rights Reserved. </p>
+          <p> Copyright © 2025 <a href="#">TrioForce Off 1</a> All Rights Reserved. </p>
         </div>
       </div>
     </div>

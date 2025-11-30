@@ -12,6 +12,15 @@ const Header = () => {
     e.preventDefault();
     navigate('/');
   };
+    const handleCategoriesClick = (e) => {
+        e.preventDefault();
+        navigate('/recipe-categories');
+      };
+ const handleRecipeGridClick = (e) => {
+        e.preventDefault();
+        navigate('/recipe-grid');
+      };
+
 
   return (
     <header className="metro_header header-1 can-sticky">
@@ -20,7 +29,7 @@ const Header = () => {
         <div className="container">
           <nav className="navbar">
             <ul className="navbar-nav">
-              <li className="menu-item"> <a href="team.html">Team</a> </li>
+              <li className="menu-item"> <a href="Đội ngũ.html">Đội ngũ</a> </li>
               <li className="menu-item"> <a href="contact-us.html">Liên hệ</a> </li>
             </ul>
             {/* Logo */}
@@ -52,7 +61,7 @@ const Header = () => {
           {/*  Menu  */}
           <ul className="navbar-nav">
             <li className="menu-item menu-item-has-children">
-              <a href="#" onClick={handleHomeClick}>Home Pages</a>
+              <a href="#" onClick={handleHomeClick}>Trang chủ</a>
               
             </li>
             {/* <li className="menu-item menu-item-has-children">
@@ -66,25 +75,25 @@ const Header = () => {
               <a href="#">Shop</a>
               <ul className="sub-menu">
                 <li className="menu-item"> <a href="shop.html">Shop Catalog</a> </li>
-                <li className="menu-item"> <a href="cart.html">Cart</a> </li>
-                <li className="menu-item"> <a href="checkout.html">Checkout</a> </li>
-                <li className="menu-item"> <a href="product-details.html">Product Details</a> </li>
+                <li className="menu-item"> <a href="cart.html">Giỏ hàng</a> </li>
+                <li className="menu-item"> <a href="checkout.html">Thanh toán</a> </li>
+                <li className="menu-item"> <a href="product-details.html">Chi tiết sản phẩm</a> </li>
               </ul>
             </li>
             <li className="menu-item menu-item-has-children mega-menu-wrapper">
-              <a href="#">Recipes</a>
+              <a href="#">Công thức</a>
               <ul className="sub-menu">
                 <li>
                   <div className="container">
                     <div className="row">
                       <div className="col-lg-4">
                         <div className="mega-menu-item">
-                          <h6>Recipe Pages</h6>
-                          <a href="recipe-grid.html">Recipe Archive</a>
-                          <a href="recipe-details.html">Recipe Details</a>
-                          <a href="recipe-categories.html">Recipe Categories</a>
-                          <a href="recipe-authors.html">Recipe Authors</a>
-                          <a href="recipe-submit.html">Submit Recipe</a>
+                          <h6>Trang công thức</h6>
+                          <a href="#" onClick={handleRecipeGridClick}>Blog công thức</a>
+                          <a href="recipe-details.html">Công thức chi tiết</a>
+                          <a href="#" onClick={handleCategoriesClick}>Danh mục công thức</a>
+                          <a href="recipe-authors.html">Tác giả công thức</a>
+                          <a href="recipe-submit.html">Quản lý công thức</a>
                         </div>
                       </div>
                       <div className="col-lg-4">
@@ -114,9 +123,9 @@ const Header = () => {
             <li className="menu-item menu-item-has-children">
               <a href="#">Pages</a>
               <ul className="sub-menu">
-                <li className="menu-item"> <a href="contact-us.html">Contact Us</a> </li>
+                <li className="menu-item"> <a href="contact-us.html">Liên hệ</a> </li>
 
-                <li className="menu-item"> <a href="team.html">Team</a> </li>
+                <li className="menu-item"> <a href="Đội ngũ.html">Đội ngũ</a> </li>
               </ul>
             </li>
           </ul>

@@ -1,16 +1,16 @@
 import React from "react";
 import subheaderImg from '../../assets/img/subheader.jpg';
 
-const RecipeDetailBanner = () => {
+const RecipeCategoriesBanner = () => {
   return (
 <div className="metro_subheader dark-overlay dark-overlay-2" style={{backgroundImage: `url(${subheaderImg})`}}>
     <div className="container">
       <div className="metro_subheader-inner">
-        <h1>Chi Tiết Công Thức</h1>
+        <h1>Danh Mục Công Thức</h1>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="#">Trang chủ</a></li>
-            <li className="breadcrumb-item active" aria-current="page">Chi Tiết Công Thức</li>
+            <li className="breadcrumb-item active" aria-current="page">Danh Mục Công Thức</li>
           </ol>
         </nav>
       </div>
@@ -18,4 +18,4 @@ const RecipeDetailBanner = () => {
   </div>
   );
 };
-export default RecipeDetailBanner;
+export default RecipeCategoriesBanner;
