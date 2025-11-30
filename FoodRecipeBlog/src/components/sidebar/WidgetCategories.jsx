@@ -3,16 +3,16 @@ import React from 'react';
 const WidgetCategories = () => {
   return (
          <div className="sidebar-widget">
-              <h5 className="widget-title"> Post Categories </h5>
+              <h5 className="widget-title"> Bài viết theo danh mục </h5>
               <ul className="sidebar-widget-list">
-                <li> <a href="#"> Vegan </a> </li>
-                <li> <a href="#"> Breakfast </a> </li>
-                <li> <a href="#"> Pizza </a> </li>
-                <li> <a href="#"> Salads</a> </li>
-                <li> <a href="#"> Drinks  </a> </li>
-                <li> <a href="#"> Bread </a> </li>
-                <li> <a href="#"> Lunch </a> </li>
-                <li> <a href="#"> Dinner </a> </li>
+                <li> <a href="#">Ăn chay</a> </li>
+                <li> <a href="#">Bữa sáng</a> </li>
+                <li> <a href="#">Pizza</a> </li>
+                <li> <a href="#">Salad</a> </li>
+                <li> <a href="#">Đồ uống</a> </li>
+                <li> <a href="#">Bánh mì</a> </li>
+                <li> <a href="#">Bữa trưa</a> </li>
+                <li> <a href="#">Bữa tối</a> </li>
               </ul>
         </div>    
   );

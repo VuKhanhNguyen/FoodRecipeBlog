@@ -3,19 +3,19 @@ import React from 'react';
 const WidgetTags = () => {
   return (
         <div className="sidebar-widget">
-              <h5 className="widget-title">Popular Tags</h5>
+              <h5 className="widget-title">Các tag phổ biến</h5>
               <div className="tagcloud">
-                <a href="#">Health</a>
-                <a href="#">Food</a>
-                <a href="#">Ingredients</a>
-                <a href="#">Organic</a>
-                <a href="#">Farms</a>
-                <a href="#">Green</a>
-                <a href="#">Fiber</a>
-                <a href="#">Supplements</a>
-                <a href="#">Gain</a>
-                <a href="#">Live Stock</a>
-                <a href="#">Harvest</a>
+                <a href="#">Sức khỏe</a>
+                <a href="#">Đồ ăn</a>
+                <a href="#">Nguyên liệu</a>
+                <a href="#">Hữu cơ</a>
+                <a href="#">Trang trại</a>
+                <a href="#">Xanh</a>
+                <a href="#">Chất xơ</a>
+                <a href="#">Thực phẩm bổ sung</a>
+                <a href="#">Tăng cân</a>
+                <a href="#">Gia súc</a>
+                <a href="#">Thu hoạch</a>
               </div>
         </div>
   );

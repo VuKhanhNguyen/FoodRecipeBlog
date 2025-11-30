@@ -7,9 +7,9 @@ const WidgetCTA = () => {
         <div className="sidebar-widget sidebar-cta">
            <img src={cta2} alt="Call To Action" />
            <div className="sidebar-cta-content">
-             <span>Good Food</span>
-             <h6>Best Quality Food</h6>
-             <a href="shop.html" className="metro_btn-custom">Shop Now</a>
+             <span>Thức ăn ngon</span>
+             <h6>Thức ăn chất lượng tốt nhất</h6>
+             <a href="shop.html" className="metro_btn-custom">Mua ngay</a>
            </div>
         </div>
   );

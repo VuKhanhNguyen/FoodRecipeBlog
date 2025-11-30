@@ -7,7 +7,7 @@ import people3 from '../../assets/img/people/3.png';
   const WidgetTestimonials = () => {
     return (
         <div className="sidebar-widget">
-              <h5 className="widget-title">People are Saying</h5>
+              <h5 className="widget-title">Những lời chứng thực</h5>
               <div className="metro_testimonials">
 
                 <div className="metro_testimonial-item">

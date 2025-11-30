@@ -81,7 +81,7 @@ const FeaturedRecipe = () => {
   return (
     <div className="section metro_home-slider-wrapper-2">
       <div className="section-title flex-title">
-        <h4 className="title">Featured Recipes</h4>
+        <h4 className="title">Công thức nổi bật</h4>
         <div className="metro_arrows">
           <i className="fa fa-arrow-left slick-arrow slider-prev"></i>
           <i className="fa fa-arrow-right slick-arrow slider-next"></i>

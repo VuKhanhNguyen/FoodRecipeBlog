@@ -81,7 +81,7 @@ const PopularRecipe = () => {
   return (   
     <div className="section p-0 metro_home-slider-wrapper">
       <div className="section-title flex-title">
-        <h4 className="title">Popular Recipes</h4>    
+        <h4 className="title">Công thức phổ biến</h4>    
         <div className="metro_arrows">
           <i className="fa fa-arrow-left slick-arrow slider-prev"></i>
           <i className="fa fa-arrow-right slick-arrow slider-next"></i>
@@ -99,8 +99,8 @@ const PopularRecipe = () => {
           <div className="metro_post-body">
             <div className="metro_post-desc">
               <span className="metro_post-meta"> 
-                <a href="#"> <i className="far fa-clock"></i> 45 Minutes </a> 
-                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Expert</a> 
+                <a href="#"> <i className="far fa-clock"></i> 45 phút </a> 
+                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> 
               </span>
               <h5> <a href="recipe-details.html">Cheese Burger With a Touch of Curry and Cumin</a> </h5>
             </div>
@@ -116,8 +116,8 @@ const PopularRecipe = () => {
           <div className="metro_post-body">
             <div className="metro_post-desc">
               <span className="metro_post-meta"> 
-                <a href="#"> <i className="far fa-clock"></i> 45 Minutes </a> 
-                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Expert</a> 
+                <a href="#"> <i className="far fa-clock"></i> 45 phút </a> 
+                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> 
               </span>
               <h5> <a href="recipe-details.html">Cheese Burger With a Touch of Curry and Cumin</a> </h5>
             </div>
@@ -133,8 +133,8 @@ const PopularRecipe = () => {
           <div className="metro_post-body">
             <div className="metro_post-desc">
               <span className="metro_post-meta"> 
-                <a href="#"> <i className="far fa-clock"></i> 45 Minutes </a> 
-                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Expert</a> 
+                <a href="#"> <i className="far fa-clock"></i> 45 phút </a> 
+                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> 
               </span>
               <h5> <a href="recipe-details.html">Cheese Burger With a Touch of Curry and Cumin</a> </h5>
             </div>
@@ -150,8 +150,8 @@ const PopularRecipe = () => {
           <div className="metro_post-body">
             <div className="metro_post-desc">
               <span className="metro_post-meta"> 
-                <a href="#"> <i className="far fa-clock"></i> 45 Minutes </a> 
-                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Expert</a> 
+                <a href="#"> <i className="far fa-clock"></i> 45 phút </a> 
+                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> 
               </span>
               <h5> <a href="recipe-details.html">Cheese Burger With a Touch of Curry and Cumin</a> </h5>
             </div>
@@ -168,10 +168,10 @@ const PopularRecipe = () => {
           <div className="metro_post-body">
             <div className="metro_post-desc">
               <span className="metro_post-meta"> 
-                <a href="#"> <i className="far fa-clock"></i> 30 Minutes </a> 
-                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Beginner</a> 
+                <a href="#"> <i className="far fa-clock"></i> 30 phút </a> 
+                <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Người mới bắt đầu</a> 
               </span>
-              <h5> <a href="recipe-details.html">Another Delicious Recipe</a> </h5>
+              <h5> <a href="recipe-details.html">Công thức ngon khác</a> </h5>
             </div>
           </div>
         </article>

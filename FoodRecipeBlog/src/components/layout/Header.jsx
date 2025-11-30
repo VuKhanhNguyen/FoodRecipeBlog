@@ -2,8 +2,17 @@ import React from 'react';
 import logo from '../../assets/img/logo.png';
 import category3 from '../../assets/img/categories/3.jpg';
 import category2 from '../../assets/img/categories/2.jpg';
+import HomePage from '../../pages/HomePage';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleHomeClick = (e) => {
+    e.preventDefault();
+    navigate('/');
+  };
+
   return (
     <header className="metro_header header-1 can-sticky">
       {/* Middle Header */}
@@ -12,7 +21,7 @@ const Header = () => {
           <nav className="navbar">
             <ul className="navbar-nav">
               <li className="menu-item"> <a href="team.html">Team</a> </li>
-              <li className="menu-item"> <a href="contact-us.html">Contact Us</a> </li>
+              <li className="menu-item"> <a href="contact-us.html">Liên hệ</a> </li>
             </ul>
             {/* Logo */}
             <a className="navbar-brand" href="index.html"> 
@@ -20,7 +29,7 @@ const Header = () => {
             </a>
             {/* Controls */}
             <div className="metro_header-controls">
-              <a href="recipe-submit.html" className="metro_btn-custom">Submit Recipe</a>
+              <a href="recipe-submit.html" className="metro_btn-custom">Quản lý công thức</a>
               <div className="aside-toggler aside-trigger-left">
                 <span></span><span></span><span></span>
               </div>
@@ -43,16 +52,16 @@ const Header = () => {
           {/*  Menu  */}
           <ul className="navbar-nav">
             <li className="menu-item menu-item-has-children">
-              <a href="#">Home Pages</a>
+              <a href="#" onClick={handleHomeClick}>Home Pages</a>
               
             </li>
-            <li className="menu-item menu-item-has-children">
+            {/* <li className="menu-item menu-item-has-children">
               <a href="#">Blog</a>
               <ul className="sub-menu">
                 <li className="menu-item"> <a href="blog-grid.html">Blog Archive</a> </li>
                 <li className="menu-item"> <a href="blog-details.html">Blog Details</a> </li>
               </ul>
-            </li>
+            </li> */}
             <li className="menu-item menu-item-has-children">
               <a href="#">Shop</a>
               <ul className="sub-menu">

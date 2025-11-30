@@ -15,6 +15,6 @@ import Headers from './components/layout/Header.jsx';
 import HomePage from './pages/HomePage.jsx';
 createRoot(document.body).render(
   <StrictMode>
-    <HomePage />
+    <App />
   </StrictMode>
 ) 

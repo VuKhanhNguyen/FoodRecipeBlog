@@ -11,6 +11,7 @@ import PopularRecipe from '../components/home/PopularRecipe';
 import FeaturedRecipe from '../components/home/FeaturedRecipe';
 import Pagination from '../components/common/Pagination';
 
+
 const HomePage = () => {
   return (
     <React.Fragment>
@@ -29,8 +30,8 @@ const HomePage = () => {
               {/* Regular Recipes - Assuming RecipeCard is used for this */}
               <div className="section section-padding pt-0">
                 <div className="section-title flex-title">
-                  <h4 className="title">Regular Recipes</h4>
-                  <a href="recipe-grid.html" className="btn-link"> View All Recipes <i className="fas fa-arrow-right"></i>  </a>
+                  <h4 className="title">Công thức thường</h4>
+                  <a href="recipe-grid.html" className="btn-link"> Xem tất cả công thức <i className="fas fa-arrow-right"></i>  </a>
                 </div>
                 <div className="row">
                   <div className="col-md-6">
@@ -53,8 +54,8 @@ const HomePage = () => {
               {/* Trending Recipes can be added here */}
                 <div className="section section-padding p-0">
                     <div className="section-title flex-title">
-                    <h4 className="title">Trending Recipes</h4>
-                    <a href="recipe-grid.html" className="btn-link"> View All Recipes <i className="fas fa-arrow-right"></i>  </a>
+                    <h4 className="title">Công thức thịnh hành</h4>
+                    <a href="recipe-grid.html" className="btn-link"> Xem tất cả công thức <i className="fas fa-arrow-right"></i>  </a>
                     </div>
                     <div className="row">       
                         <div className="col-md-6">

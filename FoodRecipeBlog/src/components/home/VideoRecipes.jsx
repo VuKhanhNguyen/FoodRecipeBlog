@@ -10,8 +10,8 @@ const VideoRecipes = () => {
 <div className="section section-padding pt-0">
 
             <div className="section-title flex-title">
-              <h4 className="title">Watch Video Recipes</h4>
-              <a href="recipe-grid.html" className="btn-link"> View All Recipes <i className="fas fa-arrow-right"></i>  </a>
+              <h4 className="title">Xem Video Công Thức</h4>
+              <a href="recipe-grid.html" className="btn-link"> Xem tất cả công thức <i className="fas fa-arrow-right"></i>  </a>
             </div>
 
             <div className="row">
@@ -20,7 +20,7 @@ const VideoRecipes = () => {
                   <img src={video1} alt="Recipe"/>
                   <a href="https://www.youtube.com/watch?v=TKnufs85hXk" className="popup-youtube"> <i className="far fa-play"></i> </a>
                   <div className="metro_recipe-video-content">
-                    <span className="metro_post-meta"> <a href="#"> <i className="far fa-clock"></i> 45 Minutes </a> <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Expert</a> </span>
+                    <span className="metro_post-meta"> <a href="#"> <i className="far fa-clock"></i> 45 phút </a> <a href="recipe-details.html"> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> </span>
                     <h6>Tomatoes Stuffed with Foie and Chanterelles Mirage JS Deep Understanding Mirage</h6>
                   </div>
                 </div>

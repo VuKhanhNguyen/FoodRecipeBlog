@@ -3,7 +3,7 @@ import React from 'react';
 const WidgetSocialLinks = () => {
   return (
          <div className="sidebar-widget">
-              <h5 className="widget-title">Social Links</h5>
+              <h5 className="widget-title">Liên kết xã hội</h5>
               <ul className="metro_sm">
                 <li> <a href="#" className="facebook"> <i className="fab fa-facebook-f"></i> </a> </li>
                 <li> <a href="#" className="twitter"> <i className="fab fa-twitter"></i> </a> </li>

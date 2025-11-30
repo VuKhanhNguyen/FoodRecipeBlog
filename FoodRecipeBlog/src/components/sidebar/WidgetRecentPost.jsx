@@ -5,7 +5,7 @@ import blog1 from '../../assets/img/blog/1.jpg';
 const WidgetRecentPost = () => {
   return (
         <div className="sidebar-widget widget-recent-posts">
-           <h5 className="widget-title">Recent Posts</h5>
+           <h5 className="widget-title">Những bài viết gần đây</h5>
            {/* Có thể map mảng data để render danh sách bài viết nhỏ */}
            <article className="post">
               <a href="blog-details.html"><img src={blog1} alt="post"/></a>
