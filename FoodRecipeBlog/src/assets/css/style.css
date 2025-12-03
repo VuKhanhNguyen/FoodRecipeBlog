@@ -847,6 +847,83 @@ textarea{
   animation-timing-function: ease-out;
 }
 
+/* User Dropdown Menu */
+.user-menu-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  margin-top: 10px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdownSlide 0.3s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #fff;
+}
+
+.user-dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-dropdown-menu .dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.user-dropdown-menu .dropdown-item i {
+  margin-right: 10px;
+  color: #ff0005;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.user-dropdown-menu .dropdown-item:hover {
+  background: #fff5f5;
+  color: #ff0005;
+  padding-left: 25px;
+}
+
+.user-dropdown-menu .dropdown-item:hover i {
+  transform: scale(1.1);
+}
+
 /*==================
 1.5. Colors & Badges
 ====================*/
@@ -4782,7 +4859,7 @@ td.remove{
   }
 
   .metro_banner-text h1{
-    font-size: 60px;
+    font-size: 30px;
     max-width: 700px;
   }
   .metro_banner.banner-2 .metro_banner-item h1{
@@ -5301,4 +5378,11 @@ td.remove{
     max-width: 100%;
   }
 
+}
+
+
+.metro_banner.banner-2 .metro_banner-item h1{
+  font-family: TrashHand;
+  font-size: 120px;
+  max-width: 100%;
 }

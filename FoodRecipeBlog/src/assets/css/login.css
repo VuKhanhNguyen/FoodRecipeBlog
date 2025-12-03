@@ -1,0 +1,485 @@
+/* Login Page Styles */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 50%, #fff5f5 100%);
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Background Elements */
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 0, 5, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: moveBackground 20s linear infinite;
+}
+
+@keyframes moveBackground {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+.login-container {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  padding: 50px 40px;
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Login Form Header */
+.login-form-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-form-header h2 {
+  color: #ff0005;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  position: relative;
+  display: inline-block;
+}
+
+.login-form-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #ff0005, #bc0004);
+  border-radius: 2px;
+}
+
+.login-form-header p {
+  color: #666;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+/* Form Groups */
+.login-form .form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.login-form .form-group label {
+  display: block;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.login-form .form-group label i {
+  color: #ff0005;
+  margin-right: 8px;
+}
+
+.login-form .form-control {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #333;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.login-form .form-control:focus {
+  outline: none;
+  border-color: #ff0005;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 0, 5, 0.1);
+  transform: translateY(-2px);
+}
+
+.login-form .form-control::placeholder {
+  color: #999;
+}
+
+/* Form Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: #ff0005;
+}
+
+.remember-me label {
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.forgot-password {
+  color: #ff0005;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #bc0004;
+  text-decoration: underline;
+}
+
+/* Login Button */
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.btn-login::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-login:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-login:active {
+  transform: scale(0.98);
+}
+
+/* Signup Link */
+.signup-link {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.signup-link p {
+  color: #666;
+  font-size: 15px;
+  margin: 0;
+}
+
+.signup-link a {
+  color: #ff0005;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.signup-link a:hover {
+  color: #bc0004;
+  text-decoration: underline;
+}
+
+/* Social Login */
+.social-login-wrapper {
+  margin-top: 35px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e8e8e8;
+}
+
+.divider span {
+  padding: 0 15px;
+}
+
+.social-login-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-btn i {
+  font-size: 18px;
+}
+
+.social-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  transition: left 0.4s ease;
+}
+
+.social-btn:hover::before {
+  left: 0;
+}
+
+.social-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Google Button */
+.google-btn {
+  border-color: #DB4437;
+}
+
+.google-btn::before {
+  background: #DB4437;
+}
+
+.google-btn:hover {
+  border-color: #DB4437;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(219, 68, 55, 0.3);
+}
+
+.google-btn i {
+  color: #DB4437;
+  transition: color 0.3s ease;
+}
+
+.google-btn:hover i {
+  color: #fff;
+}
+
+/* Facebook Button */
+.facebook-btn {
+  border-color: #4267B2;
+}
+
+.facebook-btn::before {
+  background: #4267B2;
+}
+
+.facebook-btn:hover {
+  border-color: #4267B2;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(66, 103, 178, 0.3);
+}
+
+.facebook-btn i {
+  color: #4267B2;
+  transition: color 0.3s ease;
+}
+
+.facebook-btn:hover i {
+  color: #fff;
+}
+
+/* Twitter Button */
+.twitter-btn {
+  border-color: #1DA1F2;
+}
+
+.twitter-btn::before {
+  background: #1DA1F2;
+}
+
+.twitter-btn:hover {
+  border-color: #1DA1F2;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+}
+
+.twitter-btn i {
+  color: #1DA1F2;
+  transition: color 0.3s ease;
+}
+
+.twitter-btn:hover i {
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .login-container {
+    padding: 40px 25px;
+  }
+
+  .login-form-header h2 {
+    font-size: 26px;
+  }
+
+  .social-login-buttons {
+    flex-direction: column;
+  }
+
+  .social-btn {
+    width: 100%;
+  }
+
+  .form-options {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+}
+
+/* Loading Animation */
+.btn-login.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.btn-login.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Input Animation on Error */
+.form-control.error {
+  border-color: #ff0005;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Success Message */
+.success-message {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error Message */
+.error-message {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  animation: slideDown 0.4s ease;
+}

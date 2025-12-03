@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logo from '../../assets/img/logo.png';
 import category3 from '../../assets/img/categories/3.jpg';
 import category2 from '../../assets/img/categories/2.jpg';
@@ -7,20 +7,76 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập
+    const username = localStorage.getItem('username');
+    setIsLoggedIn(!!username);
+
+    // Đóng dropdown khi click bên ngoài
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleHomeClick = (e) => {
     e.preventDefault();
     navigate('/');
   };
-    const handleCategoriesClick = (e) => {
-        e.preventDefault();
-        navigate('/recipe-categories');
-      };
+  const handleCategoriesClick = (e) => {
+    e.preventDefault();
+    navigate('/recipe-categories');
+  };
  const handleRecipeGridClick = (e) => {
-        e.preventDefault();
-        navigate('/recipe-grid');
-      };
+    e.preventDefault();
+    navigate('/recipe-grid');
+  };
+  const handleRecipeDetailClick = (e) => {
+    e.preventDefault();
+    navigate('/recipe-detail');
+  }
+  const handleTeamClick = (e) => {
+    e.preventDefault();
+    navigate('/team');
+  }
 
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    if (isLoggedIn) {
+      // Nếu đã đăng nhập, toggle dropdown
+      setShowDropdown(!showDropdown);
+    } else {
+      // Nếu chưa đăng nhập, chuyển đến trang login
+      navigate('/login');
+    }
+  }
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Bạn có muốn đăng xuất không?');
+    if (confirmLogout) {
+      localStorage.removeItem('username');
+      setIsLoggedIn(false);
+      setShowDropdown(false);
+      alert('Đăng xuất thành công!');
+      navigate('/');
+    }
+  }
+
+  const handleSettings = () => {
+    setShowDropdown(false);
+    // Có thể navigate đến trang cài đặt sau
+    alert('Chức năng cài đặt đang được phát triển!');
+  }
 
   return (
     <header className="metro_header header-1 can-sticky">
@@ -38,7 +94,22 @@ const Header = () => {
             </a>
             {/* Controls */}
             <div className="metro_header-controls">
-              <a href="recipe-submit.html" className="metro_btn-custom">Quản lý công thức</a>
+              <div className="user-menu-wrapper" ref={dropdownRef}>
+                <a href="#" onClick={handleLoginClick} className="metro_btn-custom">
+                  <i className="fa fa-user"></i> {localStorage.getItem('username') || 'Đăng nhập'}
+                  {isLoggedIn && <i className="fa fa-chevron-down" style={{marginLeft: '8px', fontSize: '12px'}}></i>}
+                </a>
+                {isLoggedIn && showDropdown && (
+                  <div className="user-dropdown-menu">
+                    <a href="#" onClick={handleSettings} className="dropdown-item">
+                      <i className="fa fa-cog"></i> Cài đặt
+                    </a>
+                    <a href="#" onClick={handleLogout} className="dropdown-item">
+                      <i className="fa fa-sign-out-alt"></i> Đăng xuất
+                    </a>
+                  </div>
+                )}
+              </div>
               <div className="aside-toggler aside-trigger-left">
                 <span></span><span></span><span></span>
               </div>
@@ -90,7 +161,7 @@ const Header = () => {
                         <div className="mega-menu-item">
                           <h6>Trang công thức</h6>
                           <a href="#" onClick={handleRecipeGridClick}>Blog công thức</a>
-                          <a href="recipe-details.html">Công thức chi tiết</a>
+                          <a href="#" onClick={handleRecipeDetailClick}>Công thức chi tiết</a>
                           <a href="#" onClick={handleCategoriesClick}>Danh mục công thức</a>
                           <a href="recipe-authors.html">Tác giả công thức</a>
                           <a href="recipe-submit.html">Quản lý công thức</a>
@@ -121,11 +192,11 @@ const Header = () => {
               </ul>
             </li>
             <li className="menu-item menu-item-has-children">
-              <a href="#">Pages</a>
+              <a href="#">Khác</a>
               <ul className="sub-menu">
                 <li className="menu-item"> <a href="contact-us.html">Liên hệ</a> </li>
 
-                <li className="menu-item"> <a href="Đội ngũ.html">Đội ngũ</a> </li>
+                <li className="menu-item"> <a href="#" onClick={handleTeamClick}>Đội ngũ</a> </li>
               </ul>
             </li>
           </ul>

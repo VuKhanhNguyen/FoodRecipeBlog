@@ -13,9 +13,9 @@ const RecipeCategoriesPage = () => {
         <React.Fragment>
             <Header />
             <RecipeCategoriesBanner />
-            <div class="section">
-                <div class="container">
-                    <div class="row">
+            <div className="section">
+                <div className="container">
+                    <div className="row">
                         <Categories />
                         <Categories />
                         <Categories />

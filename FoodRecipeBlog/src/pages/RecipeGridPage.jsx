@@ -6,32 +6,33 @@ import RecipeCard from "../components/common/RecipeCard";
 import { useNavigate } from 'react-router-dom';
 import InstagramFeed from '../components/home/InstagramFeed';
 import Pagination from "../components/common/Pagination";
+import RecipeBlogBanner from "../components/otherBanner/RecipeBlogBanner";
 
 const RecipeCategoriesPage = () => {
 
     return(
         <React.Fragment>
             <Header />
-            <RecipeCategoriesBanner />
-            <div class="section">
-                <div class="container">
-                    <div class="row">
-                         <div class="col-lg-4 col-md-6">
+            <RecipeBlogBanner />
+            <div className="section">
+                <div className="container">
+                    <div className="row">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
-                         <div class="col-lg-4 col-md-6">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
-                         <div class="col-lg-4 col-md-6">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
-                         <div class="col-lg-4 col-md-6">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
-                         <div class="col-lg-4 col-md-6">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
-                         <div class="col-lg-4 col-md-6">
+                         <div className="col-lg-4 col-md-6">
                             <RecipeCard /> 
                         </div>
                     </div>

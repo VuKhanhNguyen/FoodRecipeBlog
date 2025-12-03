@@ -1,12 +1,12 @@
 import React from "react";
 import subheaderImg from '../../assets/img/subheader.jpg';
 
-const RecipeDetailBanner = () => {
+const RecipeBlogBanner = () => {
   return (
 <div className="metro_subheader dark-overlay dark-overlay-2" style={{backgroundImage: `url(${subheaderImg})`}}>
     <div className="container">
       <div className="metro_subheader-inner">
-        <h1>Công Thức Chi Tiết</h1>
+        <h1>Blog Công Thức</h1>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="#">Trang chủ</a></li>
@@ -18,4 +18,4 @@ const RecipeDetailBanner = () => {
   </div>
   );
 };
-export default RecipeDetailBanner;
+export default RecipeBlogBanner;

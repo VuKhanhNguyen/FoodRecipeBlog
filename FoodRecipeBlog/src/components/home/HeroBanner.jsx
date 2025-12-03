@@ -47,7 +47,7 @@ const HeroBanner = () => {
 
             <div className="container">
             <div className="metro_banner-text">
-                <h1>Chào mừng đến với cộng đồng chia sẻ công thức</h1>
+                <h1 className="custom-banner-heading">Chào mừng đến với cộng đồng chia sẻ công thức</h1>
             </div>
             </div>
 
@@ -57,7 +57,7 @@ const HeroBanner = () => {
 
             <div className="container">
             <div className="metro_banner-text">
-                <h1>Công thức ngon đang chờ đón bạn</h1>
+                <h1 className="custom-banner-heading">Công thức ngon đang chờ đón bạn</h1>
             </div>
             </div>
 

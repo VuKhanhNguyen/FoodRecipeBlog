@@ -6,11 +6,11 @@ const RecipeDetailBanner = () => {
 <div className="metro_subheader dark-overlay dark-overlay-2" style={{backgroundImage: `url(${subheaderImg})`}}>
     <div className="container">
       <div className="metro_subheader-inner">
-        <h1>Công Thức Chi Tiết</h1>
+        <h1>Đội Ngũ Của Chúng Tôi</h1>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="#">Trang chủ</a></li>
-            <li className="breadcrumb-item active" aria-current="page">Công Thức Chi Tiết</li>
+            <li className="breadcrumb-item active" aria-current="page">Đội Ngũ Của Chúng Tôi</li>
           </ol>
         </nav>
       </div>

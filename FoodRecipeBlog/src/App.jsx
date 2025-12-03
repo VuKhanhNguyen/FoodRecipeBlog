@@ -7,6 +7,8 @@ import HomePage from './pages/HomePage.jsx'
 import RecipeDetailPage from './pages/RecipeDetailPage.jsx'
 import RecipeCategoriesPage from './pages/RecipeCategoriesPage.jsx'
 import RecipeGridPage from './pages/RecipeGridPage.jsx';
+import TeamPage from './pages/TeamPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
 
 function App() {
 
@@ -18,6 +20,8 @@ return (
         <Route path="/recipe/:id" element={<RecipeDetailPage />} />
         <Route path="/recipe-categories" element={<RecipeCategoriesPage />} />
         <Route path="/recipe-grid" element={<RecipeGridPage />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );
