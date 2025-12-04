@@ -78,6 +78,11 @@ const Header = () => {
     alert('Chức năng cài đặt đang được phát triển!');
   }
 
+  const handleRecipeSubmit = () => {
+    setShowDropdown(false);
+    navigate('/recipe-submit');
+  }
+
   return (
     <header className="metro_header header-1 can-sticky">
       {/* Middle Header */}
@@ -101,6 +106,9 @@ const Header = () => {
                 </a>
                 {isLoggedIn && showDropdown && (
                   <div className="user-dropdown-menu">
+                    <a href="#" onClick={handleRecipeManage} className="dropdown-item">
+                      <i className="fa fa-utensils"></i> Quản lý công thức
+                    </a>
                     <a href="#" onClick={handleSettings} className="dropdown-item">
                       <i className="fa fa-cog"></i> Cài đặt
                     </a>
@@ -164,7 +172,7 @@ const Header = () => {
                           <a href="#" onClick={handleRecipeDetailClick}>Công thức chi tiết</a>
                           <a href="#" onClick={handleCategoriesClick}>Danh mục công thức</a>
                           <a href="recipe-authors.html">Tác giả công thức</a>
-                          <a href="recipe-submit.html">Quản lý công thức</a>
+                          <a href="#" onClick={handleRecipeSubmit}>Quản lý công thức</a>
                         </div>
                       </div>
                       <div className="col-lg-4">

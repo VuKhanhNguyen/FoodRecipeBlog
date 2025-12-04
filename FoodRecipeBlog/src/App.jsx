@@ -9,6 +9,7 @@ import RecipeCategoriesPage from './pages/RecipeCategoriesPage.jsx'
 import RecipeGridPage from './pages/RecipeGridPage.jsx';
 import TeamPage from './pages/TeamPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import SubmitBlogRecipePage from './pages/SubmitBlogRecipePage.jsx';
 
 function App() {
 
@@ -22,6 +23,7 @@ return (
         <Route path="/recipe-grid" element={<RecipeGridPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/recipe-submit" element={<SubmitBlogRecipePage />} />
       </Routes>
     </Router>
   );
