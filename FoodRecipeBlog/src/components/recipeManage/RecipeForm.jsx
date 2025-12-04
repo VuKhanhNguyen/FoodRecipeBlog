@@ -95,15 +95,8 @@ const RecipeForm = ({ formData, setFormData }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Recipe Data:", formData);
-    alert("Công thức đã được gửi thành công!");
-    // Xử lý submit form ở đây
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="recipe-submit-form">
+    <div className="recipe-submit-form">
       {/* Basic Information Section */}
       <div className="recipe-submit-section">
         <h4 className="section-title">Thông tin cơ bản</h4>
@@ -367,14 +360,7 @@ const RecipeForm = ({ formData, setFormData }) => {
           />
         </div>
       </div>
-
-      {/* Submit Button */}
-      <div className="form-submit-section">
-        <button type="submit" className="metro_btn-custom btn-submit">
-          <i className="fa fa-paper-plane"></i> Gửi công thức
-        </button>
-      </div>
-    </form>
+    </div>
   );
 };
 
