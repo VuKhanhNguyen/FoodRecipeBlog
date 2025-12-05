@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import HomePage from "./pages/HomePage.jsx";
+import RecipeDetailPage from "./pages/RecipeDetailPage.jsx";
+import RecipeCategoriesPage from "./pages/RecipeCategoriesPage.jsx";
+import RecipeGridPage from "./pages/RecipeGridPage.jsx";
+import TeamPage from "./pages/TeamPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import SubmitBlogRecipePage from "./pages/SubmitBlogRecipePage.jsx";
+import BlogRecipeManagePage from "./pages/BlogRecipeManagePage.jsx";
+import AuthorsPage from "./pages/ListAuthorsPage.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/recipe-detail" element={<RecipeDetailPage />} />
+        <Route path="/recipe/:id" element={<RecipeDetailPage />} />
+        <Route path="/recipe-categories" element={<RecipeCategoriesPage />} />
+        <Route path="/recipe-grid" element={<RecipeGridPage />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/recipe-submit" element={<SubmitBlogRecipePage />} />
+        <Route path="/blog-manage" element={<BlogRecipeManagePage />} />
+        <Route path="/authors" element={<AuthorsPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
