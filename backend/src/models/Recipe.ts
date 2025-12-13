@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-export interface Recipe {
+export interface IRecipe {
   _id: Types.ObjectId;
 
   title: string;
@@ -24,12 +24,12 @@ export interface Recipe {
   views: number;
   likes: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 
-const RecipeSchema = new Schema<Recipe>(
+const RecipeSchema = new Schema<IRecipe>(
   {
     title: { type: String, required: true, trim: true },
 
@@ -102,4 +102,4 @@ const RecipeSchema = new Schema<Recipe>(
 RecipeSchema.index({ title: 'text', tags: 'text' });
 RecipeSchema.index({ category: 1 });
 
-export const RecipeModel = model<Recipe>('Recipe', RecipeSchema);
+export const RecipeModel = model<IRecipe>('Recipe', RecipeSchema);

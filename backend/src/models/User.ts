@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-export interface User {
+export interface IUser {
   _id: Types.ObjectId;
 
   username: string;
@@ -12,12 +12,12 @@ export interface User {
 
   role: 'admin' | 'user';
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 
-const UserSchema = new Schema<User>(
+const UserSchema = new Schema<IUser>(
   {
     username: {
       type: String,
@@ -64,4 +64,4 @@ const UserSchema = new Schema<User>(
 UserSchema.index({ email: 1 });
 UserSchema.index({ username: 1 });
 
-export const UserModel = model<User>('User', UserSchema);
+export const UserModel = model<IUser>('User', UserSchema);

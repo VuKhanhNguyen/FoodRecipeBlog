@@ -1,15 +1,15 @@
 import { Schema, model, Types } from 'mongoose';
 
-export interface Favorite {
+export interface IFavorite {
   _id: Types.ObjectId;
 
   userId: Types.ObjectId;
   recipeId: Types.ObjectId;
 
-  createdAt: Date;
+  createdAt?: Date;
 }
 
-const FavoriteSchema = new Schema<Favorite>(
+const FavoriteSchema = new Schema<IFavorite>(
   {
     userId: {
       type: Types.ObjectId,
@@ -32,4 +32,4 @@ const FavoriteSchema = new Schema<Favorite>(
 // Mỗi user chỉ favorite 1 recipe 1 lần
 FavoriteSchema.index({ userId: 1, recipeId: 1 }, { unique: true });
 
-export const FavoriteModel = model<Favorite>('Favorite', FavoriteSchema);
+export const FavoriteModel = model<IFavorite>('Favorite', FavoriteSchema);

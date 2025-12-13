@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-export interface Category {
+export interface ICategory {
   _id: Types.ObjectId;
 
   name: string;
@@ -8,10 +8,10 @@ export interface Category {
   description?: string;
   image?: string;
 
-  createdAt: Date;
+  createdAt?: Date;
 }
 
-const CategorySchema = new Schema<Category>(
+const CategorySchema = new Schema<ICategory>(
   {
     name: {
       type: String,
@@ -43,4 +43,4 @@ const CategorySchema = new Schema<Category>(
 
 CategorySchema.index({ slug: 1 });
 
-export const CategoryModel = model<Category>('Category', CategorySchema);
+export const CategoryModel = model<ICategory>('Category', CategorySchema);

@@ -1,131 +1,58 @@
-import { IUser } from '@src/models/User';
-import { getRandomInt } from '@src/common/util/misc';
+/* eslint-disable max-len */
+import { IUser, UserModel } from '@src/models/User';
+import { IBaseRepo } from './BaseRepo';
 
-import orm from './MockOrm';
+export interface IUserRepo extends IBaseRepo<IUser> {
+  getByEmail: (email: string) => Promise<IUser | null>;
 
+  persistsByEmail: (email: string) => Promise<boolean>;
 
-/******************************************************************************
-                                Functions
-******************************************************************************/
+  getByUsername: (username: string) => Promise<IUser | null>;
+}
 
-/**
- * Get one user.
- */
-async function getOne(email: string): Promise<IUser | null> {
-  const db = await orm.openDb();
-  for (const user of db.users) {
-    if (user.email === email) {
-      return user;
-    }
+export class UserRepo implements IUserRepo {
+  private model = UserModel;
+
+  public async getAll(): Promise<IUser[]> {
+    return this.model.find({}).select('-password').exec() as Promise<IUser[]>;
   }
-  return null;
-}
 
-/**
- * See if a user with the given id exists.
- */
-async function persists(id: number): Promise<boolean> {
-  const db = await orm.openDb();
-  for (const user of db.users) {
-    if (user.id === id) {
-      return true;
-    }
+  public async getById(id: string): Promise<IUser | null> {
+    return this.model.findById(id)
+      .select('-password').exec() as Promise<IUser | null>;
   }
-  return false;
-}
 
-/**
- * Get all users.
- */
-async function getAll(): Promise<IUser[]> {
-  const db = await orm.openDb();
-  return db.users;
-}
+  public async add(data: Omit<IUser, '_id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
+    const newUser = new this.model(data);
+    const savedUser = await newUser.save();
 
-/**
- * Add one user.
- */
-async function add(user: IUser): Promise<void> {
-  const db = await orm.openDb();
-  user.id = getRandomInt();
-  db.users.push(user);
-  return orm.saveDb(db);
-}
+    const userObject = savedUser.toObject() as IUser;
+    delete (userObject as Partial<IUser>).password;
 
-/**
- * Update a user.
- */
-async function update(user: IUser): Promise<void> {
-  const db = await orm.openDb();
-  for (let i = 0; i < db.users.length; i++) {
-    if (db.users[i].id === user.id) {
-      const dbUser = db.users[i];
-      db.users[i] = {
-        ...dbUser,
-        name: user.name,
-        email: user.email,
-      };
-      return orm.saveDb(db);
-    }
+    return userObject;
+  }
+
+  public async update(id: string, data: Partial<IUser>): Promise<IUser | null> {
+    return this.model.findByIdAndUpdate(id, data, { new: true }).select('-password').exec() as Promise<IUser | null>;
+  }
+
+  public async delete(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id).exec();
+
+    return !!result;
+  }
+
+  public async getByEmail(email: string): Promise<IUser | null> {
+    return this.model.findOne({ email }).exec() as Promise<IUser | null>;
+  }
+
+  public async persistsByEmail(email: string): Promise<boolean> {
+    const count = await this.model.countDocuments({ email });
+
+    return count > 0;
+  }
+
+  public async getByUsername(username: string): Promise<IUser | null> {
+    return this.model.findOne({ username }).exec() as Promise<IUser | null>;
   }
 }
-
-/**
- * Delete one user.
- */
-async function delete_(id: number): Promise<void> {
-  const db = await orm.openDb();
-  for (let i = 0; i < db.users.length; i++) {
-    if (db.users[i].id === id) {
-      db.users.splice(i, 1);
-      return orm.saveDb(db);
-    }
-  }
-}
-
-
-// **** Unit-Tests Only **** //
-
-/**
- * Delete every user record.
- */
-async function deleteAllUsers(): Promise<void> {
-  const db = await orm.openDb();
-  db.users = [];
-  return orm.saveDb(db);
-}
-
-/**
- * Insert multiple users. Can't do multiple at once cause using a plain file 
- * for now.
- */
-async function insertMult(
-  users: IUser[] | readonly IUser[],
-): Promise<IUser[]> {
-  const db = await orm.openDb(),
-    usersF = [ ...users ];
-  for (const user of usersF) {
-    user.id = getRandomInt();
-    user.created = new Date();
-  }
-  db.users = [ ...db.users, ...users ];
-  await orm.saveDb(db);
-  return usersF;
-}
-
-
-/******************************************************************************
-                                Export default
-******************************************************************************/
-
-export default {
-  getOne,
-  persists,
-  getAll,
-  add,
-  update,
-  delete: delete_,
-  deleteAllUsers,
-  insertMult,
-} as const;
-

@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-export interface Comment {
+export interface IComment {
   _id: Types.ObjectId;
 
   recipeId: Types.ObjectId;
@@ -9,11 +9,11 @@ export interface Comment {
   content: string;
   rating?: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const CommentSchema = new Schema<Comment>(
+const CommentSchema = new Schema<IComment>(
   {
     recipeId: {
       type: Types.ObjectId,
@@ -48,4 +48,4 @@ const CommentSchema = new Schema<Comment>(
 // Index để load comment nhanh theo recipe
 CommentSchema.index({ recipeId: 1, createdAt: -1 });
 
-export const CommentModel = model<Comment>('Comment', CommentSchema);
+export const CommentModel = model<IComment>('Comment', CommentSchema);
