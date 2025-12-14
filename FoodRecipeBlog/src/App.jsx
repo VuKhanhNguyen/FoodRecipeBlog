@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SubmitBlogRecipePage from "./pages/SubmitBlogRecipePage.jsx";
 import BlogRecipeManagePage from "./pages/BlogRecipeManagePage.jsx";
 import AuthorsPage from "./pages/ListAuthorsPage.jsx";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/recipe-submit" element={<SubmitBlogRecipePage />} />
         <Route path="/blog-manage" element={<BlogRecipeManagePage />} />
         <Route path="/authors" element={<AuthorsPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
   );

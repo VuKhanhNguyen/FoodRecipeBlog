@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    remember: false
+    username: "",
+    password: "",
+    remember: false,
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
-    setError('');
+    setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Kiểm tra đăng nhập
-    if (formData.username === 'admin' && formData.password === '123456') {
+    if (formData.username === "admin" && formData.password === "123456") {
       // Lưu username vào localStorage
-      localStorage.setItem('username', formData.username);
+      localStorage.setItem("username", formData.username);
       // Chuyển về trang chủ
-      navigate('/');
+      navigate("/");
       // Reload để cập nhật header
       window.location.reload();
     } else {
-      setError('Tên đăng nhập hoặc mật khẩu không đúng!');
+      setError("Tên đăng nhập hoặc mật khẩu không đúng!");
     }
   };
 
@@ -41,10 +41,10 @@ const LoginForm = () => {
         <h2>Đăng Nhập</h2>
         <p>Chào mừng bạn trở lại! Vui lòng đăng nhập vào tài khoản của bạn.</p>
       </div>
-      
+
       <form className="login-form" onSubmit={handleSubmit}>
         {error && <div className="error-message">{error}</div>}
-        
+
         <div className="form-group">
           <label htmlFor="username">
             <i className="fa fa-user"></i> Tên đăng nhập
@@ -88,7 +88,9 @@ const LoginForm = () => {
             />
             <label htmlFor="remember">Ghi nhớ đăng nhập</label>
           </div>
-          <a href="#" className="forgot-password">Quên mật khẩu?</a>
+          <a href="#" className="forgot-password">
+            Quên mật khẩu?
+          </a>
         </div>
 
         <button type="submit" className="metro_btn-custom btn-login">
@@ -96,7 +98,9 @@ const LoginForm = () => {
         </button>
 
         <div className="signup-link">
-          <p>Chưa có tài khoản? <a href="#">Đăng ký ngay</a></p>
+          <p>
+            Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+          </p>
         </div>
       </form>
     </div>
