@@ -1,38 +1,29 @@
 import React, { useEffect } from "react";
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 import RecipeCategoriesBanner from "../components/otherBanner/RecipeCategoriesBanner";
-import Categories from '../components/categories/RecipeCategories.jsx';
-import { useNavigate } from 'react-router-dom';
-import InstagramFeed from '../components/home/InstagramFeed';
+import Categories from "../components/categories/RecipeCategories.jsx";
+import { useNavigate } from "react-router-dom";
+import InstagramFeed from "../components/home/InstagramFeed";
 import Pagination from "../components/common/Pagination";
-
+import "../assets/css/categories.css";
 const RecipeCategoriesPage = () => {
+  return (
+    <React.Fragment>
+      <Header />
+      <RecipeCategoriesBanner />
+      <div className="section">
+        <div className="container">
+          <div className="row">
+            <Categories />
+          </div>
+        </div>
+        <Pagination />
+      </div>
 
-    return(
-        <React.Fragment>
-            <Header />
-            <RecipeCategoriesBanner />
-            <div className="section">
-                <div className="container">
-                    <div className="row">
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                        <Categories />
-                    </div>
-                </div>
-                <Pagination />
-            </div>
-            
-            <InstagramFeed />
-            <Footer />
-            </React.Fragment>
-    );
+      <InstagramFeed />
+      <Footer />
+    </React.Fragment>
+  );
 };
 export default RecipeCategoriesPage;
