@@ -22,7 +22,7 @@ export class RecipeRepo implements IRecipeRepo {
     return this.model.findById(id).exec() as Promise<IRecipe | null>;
   }
 
-  public async add(data: Omit<IRecipe, '_id' | 'createdAt' | 'updatedAt'>): Promise<IRecipe> {
+  public async add(data: Omit<IRecipe, '_id' | 'createdAt' | 'updatedAt' | 'views' | 'likes'>): Promise<IRecipe> {
     const newRecipe = new this.model(data);
 
     return newRecipe.save() as Promise<IRecipe>;

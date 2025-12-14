@@ -4,6 +4,8 @@ import { IRegisterReqBody, ILoginReqBody } from './types';
 import UserService from '@src/services/UserService';
 import logger from 'jet-logger';
 import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
+import { sign } from '@src/common/util/jwt';
+import { authenticateToken } from '@src/middleware/auth';
 
 
 const authRouter = Router();
@@ -26,8 +28,15 @@ authRouter.post('/register', async (req: Request<object, object, IRegisterReqBod
       avatar,
     });
 
+    const token = sign({
+      id: newUser._id,
+      username: newUser.username,
+      role: newUser.role,
+    });
+
     return res.status(HTTP_STATUS_CODES.Created).json({
       message: 'Đăng ký thành công.',
+      token,
       user: {
         _id: newUser._id,
         username: newUser.username,
@@ -63,8 +72,15 @@ authRouter.post('/login', async (req: Request<object, object, ILoginReqBody>, re
 
     const user = await UserService.login(username, password);
 
+    const token = sign({
+      id: user._id,
+      username: user.username,
+      role: user.role,
+    });
+
     return res.status(HTTP_STATUS_CODES.Ok).json({
       message: 'Đăng nhập thành công.',
+      token,
       user: {
         _id: user._id,
         username: user.username,
@@ -84,6 +100,33 @@ authRouter.post('/login', async (req: Request<object, object, ILoginReqBody>, re
       : HTTP_STATUS_CODES.InternalServerError;
     return res.status(statusCode).json({ error: errorMessage });
   }
+});
+
+authRouter.get('/me', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call
+    const userId = (req as any).user.id.toString();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const user = await UserService.getOne(userId);
+
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.NotFound).json({ error: 'Người dùng không tồn tại.' });
+    }
+
+    return res.status(HTTP_STATUS_CODES.Ok).json({
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    logger.err(error, true);
+    return res.status(HTTP_STATUS_CODES.InternalServerError).json({ error: 'Lỗi server khi lấy thông tin người dùng.' });
+  }
+
 });
 
 export default authRouter;
