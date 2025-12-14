@@ -6,6 +6,7 @@ import UserRouter from './user/UserRouter';
 import RecipeRouter from './recipe/RecipeRouter';
 import CategoryRouter from './category/CategoryRouter';
 import CommentRouter from './comment/CommentRouter';
+import FavoriteRouter from './favorite/FavoriteRouter';
 
 
 /******************************************************************************
@@ -21,6 +22,7 @@ apiRouter.use(PATHS.Users.Base, UserRouter);
 apiRouter.use(PATHS.Recipes.Base, RecipeRouter);
 apiRouter.use(PATHS.Categories.Base, CategoryRouter);
 apiRouter.use(PATHS.Comments.Base, CommentRouter);
+apiRouter.use(PATHS.Favorites.Base, FavoriteRouter);
 
 
 /******************************************************************************

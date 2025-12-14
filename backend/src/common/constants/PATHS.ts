@@ -16,4 +16,7 @@ export default {
   Comments: {
     Base: '/comments',
   },
+  Favorites: {
+    Base: '/favorites',
+  },
 } as const;
