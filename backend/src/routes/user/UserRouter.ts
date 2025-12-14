@@ -10,13 +10,6 @@ import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
 /******************************************************************************
                                 Constants
 ******************************************************************************/
-
-// const Validators = {
-//   add: parseReq({ user: User.test }),
-//   update: parseReq({ user: User.test }),
-//   delete: parseReq({ id: transform(Number, isNumber) }),
-// } as const;
-
 const userRouter = Router();
 
 /******************************************************************************

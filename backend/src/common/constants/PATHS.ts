@@ -7,4 +7,7 @@ export default {
   Users: {
     Base: '/users',
   },
+  Recipes: {
+    Base: '/recipes',
+  },
 } as const;
