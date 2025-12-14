@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
 import { RouteError } from '@src/common/util/route-errors';
-import { IRecipe } from '@src/models/Recipe';
 import RecipeService from '@src/services/RecipeService';
 import { Router, Request, Response } from 'express';
 import logger from 'jet-logger';
+import { ICreateRecipeReqBody, IUpdateRecipeReqBody } from './types';
+import { authenticateToken } from '@src/middleware/auth';
 
 const recipeRouter = Router();
 
@@ -130,10 +131,20 @@ recipeRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-recipeRouter.post('/', async (req: Request<object, object, Omit<IRecipe, '_id' | 'createdAt' | 'updatedAt'>>, res: Response) => {
+recipeRouter.post('/', authenticateToken, async (req: Request<object, object, ICreateRecipeReqBody>, res: Response) => {
   try {
     const recipeData = req.body;
-    const newRecipe = await RecipeService.createRecipe(recipeData);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const userId = (req as any).user.id;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const newRecipe = await RecipeService.createRecipe({
+      ...recipeData,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      author: userId,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
     return res.status(HTTP_STATUS_CODES.Created).json({ recipe: newRecipe });
   } catch (error) {
     logger.err(error, true);
@@ -141,10 +152,21 @@ recipeRouter.post('/', async (req: Request<object, object, Omit<IRecipe, '_id' |
   }
 });
 
-recipeRouter.put('/:id', async (req: Request<{ id: string }, object, Partial<IRecipe>>, res: Response) => {
+recipeRouter.put('/:id', authenticateToken, async (req: Request<{ id: string }, object, IUpdateRecipeReqBody>, res: Response) => {
   try {
     const { id } = req.params;
     const recipeData = req.body;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const userId = (req as any).user.id;
+
+    const currentRecipe = await RecipeService.getOne(id);
+
+    if (currentRecipe?.author.toString() !== userId) {
+      return res.status(HTTP_STATUS_CODES.Forbidden).json({
+        error: 'Bạn không có quyền cập nhật công thức này | 403',
+      });
+    }
 
     if (Object.keys(recipeData).length === 0) {
       return res.status(HTTP_STATUS_CODES.BadRequest).json({ error: 'Dữ liệu cập nhật không được để trống | 400' });
@@ -167,9 +189,21 @@ recipeRouter.put('/:id', async (req: Request<{ id: string }, object, Partial<IRe
   }
 });
 
-recipeRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
+recipeRouter.delete('/:id', authenticateToken, async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const userId = (req as any).user.id;
+
+    const currentRecipe = await RecipeService.getOne(id);
+
+    if (currentRecipe?.author.toString() !== userId) {
+      return res.status(HTTP_STATUS_CODES.Forbidden).json({
+        error: 'Bạn không có quyền xóa công thức này | 403',
+      });
+    }
+
     await RecipeService.deleteRecipe(id);
     return res.status(HTTP_STATUS_CODES.Ok).json({
       message: 'Xóa công thức thành công | 200',

@@ -10,4 +10,7 @@ export default {
   Recipes: {
     Base: '/recipes',
   },
+  Categories: {
+    Base: '/categories',
+  },
 } as const;

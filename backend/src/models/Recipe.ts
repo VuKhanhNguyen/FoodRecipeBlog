@@ -4,25 +4,25 @@ export interface IRecipe {
   _id: Types.ObjectId;
 
   title: string;
-  description?: string;
+  description: string;
 
-  ingredients: string[];
-  instructions: string[];
+  ingredients?: string[];
+  instructions?: string[];
 
-  prepTime: number;
-  cookTime: number;
-  servings: number;
+  prepTime?: number;
+  cookTime?: number;
+  servings?: number;
 
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty?: 'easy' | 'medium' | 'hard';
 
   category: Types.ObjectId;
   author: Types.ObjectId;
 
-  images: string[];
-  tags: string[];
+  images?: string[];
+  tags?: string[];
 
-  views: number;
-  likes: number;
+  views?: number;
+  likes?: number;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -35,34 +35,36 @@ const RecipeSchema = new Schema<IRecipe>(
 
     description: {
       type: String,
+      required: true,
+      trim: true,
     },
     ingredients: {
       type: [String],
-      required: true,
+      default: [],
     },
     instructions: {
       type: [String],
-      required: true,
+      default: [],
     },
     prepTime: {
       type: Number,
-      required: true,
+      default: 0,
       min: 0,
     },
     cookTime: {
       type: Number,
-      required: true,
+      default: 0,
       min: 0,
     },
     servings: {
       type: Number,
-      required: true,
+      default: 1,
       min: 1,
     },
     difficulty: {
       type: String,
       enum: ['easy', 'medium', 'hard'],
-      required: true,
+      default: 'easy',
     },
 
     category: {
