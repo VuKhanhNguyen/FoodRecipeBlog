@@ -13,4 +13,7 @@ export default {
   Categories: {
     Base: '/categories',
   },
+  Comments: {
+    Base: '/comments',
+  },
 } as const;
