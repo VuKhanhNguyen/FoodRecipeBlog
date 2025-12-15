@@ -6,6 +6,8 @@ import { Router, Request, Response } from 'express';
 import logger from 'jet-logger';
 import { ICreateCommentReqBody, IUpdateCommentReqBody } from './types';
 import { authenticateToken } from '@src/middleware/auth';
+import { IRequestWithUser } from '@src/middleware/types';
+import { Types } from 'mongoose';
 
 
 const commentRouter = Router();
@@ -73,13 +75,15 @@ commentRouter.post('/', authenticateToken, async (req: Request<object, object, I
   try {
     const commentData = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+    const userId: string = user.id;
 
-    // commentData.userId = userId as unknown as IComment['userId'];
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const newComment = await CommentService.createComment({ ...commentData, userId: userId });
+    const newComment = await CommentService.createComment({ ...commentData, userId: new Types.ObjectId(userId) });
     return res.status(HTTP_STATUS_CODES.Created).json({ comment: newComment });
   } catch (error) {
     logger.err(error, true);
@@ -92,8 +96,13 @@ commentRouter.put('/:id', authenticateToken, async (req: Request<{ id: string },
     const { id } = req.params;
     const commentData = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+    const userId: string = user.id;
 
     const comment = await CommentService.getOne(id);
 
@@ -117,8 +126,13 @@ commentRouter.delete('/:id', authenticateToken, async (req: Request, res: Respon
   try {
     const { id } = req.params;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+    const userId: string = user.id;
 
     const comment = await CommentService.getOne(id);
     if (!comment) {

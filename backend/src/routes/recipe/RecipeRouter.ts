@@ -6,6 +6,8 @@ import { Router, Request, Response } from 'express';
 import logger from 'jet-logger';
 import { ICreateRecipeReqBody, IUpdateRecipeReqBody } from './types';
 import { authenticateToken } from '@src/middleware/auth';
+import { IRequestWithUser } from '@src/middleware/types';
+import { Types } from 'mongoose';
 
 const recipeRouter = Router();
 
@@ -134,16 +136,19 @@ recipeRouter.get('/:id', async (req: Request, res: Response) => {
 recipeRouter.post('/', authenticateToken, async (req: Request<object, object, ICreateRecipeReqBody>, res: Response) => {
   try {
     const recipeData = req.body;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const userId = (req as any).user.id;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const user = (req as Request & IRequestWithUser).user;
+
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({ error: 'Unauthorized' });
+    }
+
+    const userId = user.id;
+
     const newRecipe = await RecipeService.createRecipe({
       ...recipeData,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      author: userId,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
+      author: new Types.ObjectId(userId),
+    });
 
     return res.status(HTTP_STATUS_CODES.Created).json({ recipe: newRecipe });
   } catch (error) {
@@ -157,8 +162,13 @@ recipeRouter.put('/:id', authenticateToken, async (req: Request<{ id: string }, 
     const { id } = req.params;
     const recipeData = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+    const userId: string = user.id;
 
     const currentRecipe = await RecipeService.getOne(id);
 
@@ -193,8 +203,13 @@ recipeRouter.delete('/:id', authenticateToken, async (req: Request<{ id: string 
   try {
     const { id } = req.params;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+    const userId: string = user.id;
 
     const currentRecipe = await RecipeService.getOne(id);
 
