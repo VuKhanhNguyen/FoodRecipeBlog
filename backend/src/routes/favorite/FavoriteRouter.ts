@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable max-len */
 import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
 import { RouteError } from '@src/common/util/route-errors';
@@ -8,19 +7,18 @@ import logger from 'jet-logger';
 import { ICreateFavoriteReqBody } from './types';
 import { authenticateToken } from '@src/middleware/auth';
 import { Types } from 'mongoose';
+import { IRequestWithUser } from '@src/middleware/types';
 
 const favoriteRouter = Router();
 
 favoriteRouter.get('/all', authenticateToken, async (req: Request, res: Response) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    const user = (req as any).user;
+    const user = (req as Request & IRequestWithUser).user;
 
     if (!user) {
       return res.status(HTTP_STATUS_CODES.Unauthorized).json({ error: 'Unauthorized' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (user.role !== 'admin') {
       return res.status(HTTP_STATUS_CODES.Forbidden).json({ error: 'Forbidden' });
     }
@@ -36,10 +34,13 @@ favoriteRouter.get('/all', authenticateToken, async (req: Request, res: Response
 
 favoriteRouter.get('/my-favorites', authenticateToken, async (req: Request, res: Response) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    const userId = (req as any).user.id;
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({ error: 'Unauthorized' });
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const userId = user.id;
+
     const favorites = await FavoriteService.getByUserId(userId);
     return res.status(HTTP_STATUS_CODES.Ok).json({ favorites });
   } catch (error) {
@@ -101,14 +102,12 @@ favoriteRouter.post('/', authenticateToken, async (req: Request<object, object, 
 
     const { recipeId } = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    const user = (req as any).user;
+    const user = (req as Request & IRequestWithUser).user;
 
     if (!user) {
       return res.status(HTTP_STATUS_CODES.Unauthorized).json({ error: 'Unauthorized' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId: string = user.id;
 
     const favorite = await FavoriteService.createFavorite({
@@ -131,14 +130,12 @@ favoriteRouter.delete('/:id', authenticateToken, async (req: Request, res: Respo
   try {
     const { id } = req.params;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    const user = (req as any).user;
+    const user = (req as Request & IRequestWithUser).user;
 
     if (!user) {
       return res.status(HTTP_STATUS_CODES.Unauthorized).json({ error: 'Unauthorized' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId: string = user.id;
     const favorite = await FavoriteService.getOne(id);
 
@@ -146,7 +143,6 @@ favoriteRouter.delete('/:id', authenticateToken, async (req: Request, res: Respo
       return res.status(HTTP_STATUS_CODES.NotFound).json({ error: 'Không tìm thấy yêu thích' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (favorite.userId.toString() !== userId && user.role !== 'admin') {
       return res.status(HTTP_STATUS_CODES.Forbidden).json({ error: 'Bạn không có quyền xóa yêu thích này' });
     }

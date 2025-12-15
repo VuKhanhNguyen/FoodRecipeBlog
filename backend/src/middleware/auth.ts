@@ -2,7 +2,7 @@
 import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
 import { verify } from '@src/common/util/jwt';
 import { Request, Response, NextFunction } from 'express';
-import { IJwtPayload } from './types';
+import { IJwtPayload, IRequestWithUser } from './types';
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
@@ -23,8 +23,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
       });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-    (req as any).user = decoded;
+    (req as Request & IRequestWithUser).user = decoded;
     next();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
