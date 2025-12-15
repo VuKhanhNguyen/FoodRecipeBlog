@@ -40,6 +40,34 @@
   margin-bottom: 15px;
 }
 
-.metro_post.metro_recipe .metro_rating {
+.metro_post.metro_recipe .metro_post-footer {
   margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.metro_post.metro_recipe .metro_rating {
+  margin: 0;
+}
+
+.metro_post.metro_recipe .metro_post-stats {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.metro_post.metro_recipe .metro_post-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.metro_post.metro_recipe .metro_post-stat-item i {
+  font-size: 16px;
+  color: #999;
 }

@@ -53,9 +53,13 @@ const RecipeCard = ({ recipe }) => {
     return recipe1;
   };
 
-  // Debug: log ra để kiểm tra
-  console.log("Recipe image:", recipeData.image);
-  console.log("Using image URL:", getImageUrl());
+  // Format số lượng (1000 -> 1K, 1000000 -> 1M)
+  const formatNumber = (num) => {
+    if (!num) return 0;
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+    return num;
+  };
 
   return (
     <article className="metro_post metro_recipe">
@@ -92,8 +96,18 @@ const RecipeCard = ({ recipe }) => {
             {recipeData.description || recipeData.summary || "Không có mô tả"}
           </p>
         </div>
-        <div className="metro_rating mb-0">
-          {renderStars(recipeData.rating)}
+        <div className="metro_post-footer">
+          <div className="metro_rating">{renderStars(recipeData.rating)}</div>
+          <div className="metro_post-stats">
+            <span className="metro_post-stat-item">
+              <i className="far fa-eye"></i>{" "}
+              {formatNumber(recipeData.views || 0)}
+            </span>
+            <span className="metro_post-stat-item">
+              <i className="far fa-heart"></i>{" "}
+              {formatNumber(recipeData.likes || 0)}
+            </span>
+          </div>
         </div>
       </div>
     </article>

@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
-import { IBaseRepo } from './BaseRepo';
-import { IComment, CommentModel } from '@src/models/Comment';
+import { IBaseRepo } from "./BaseRepo";
+import { IComment, CommentModel } from "@src/models/Comment";
 
 export interface ICommentRepo extends IBaseRepo<IComment> {
   getByRecipeId: (recipeId: string) => Promise<IComment[]>;
@@ -18,13 +18,20 @@ export class CommentRepo implements ICommentRepo {
     return this.model.findById(id).exec() as Promise<IComment | null>;
   }
 
-  public async add(data: Omit<IComment, '_id' | 'createdAt' | 'updatedAt'>): Promise<IComment> {
+  public async add(
+    data: Omit<IComment, "_id" | "createdAt" | "updatedAt">
+  ): Promise<IComment> {
     const newComment = new this.model(data);
     return newComment.save() as Promise<IComment>;
   }
 
-  public async update(id: string, data: Partial<IComment>): Promise<IComment | null> {
-    return this.model.findByIdAndUpdate(id, data, { new: true }).exec() as Promise<IComment | null>;
+  public async update(
+    id: string,
+    data: Partial<IComment>
+  ): Promise<IComment | null> {
+    return this.model
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec() as Promise<IComment | null>;
   }
 
   public async delete(id: string): Promise<boolean> {
@@ -33,10 +40,12 @@ export class CommentRepo implements ICommentRepo {
   }
 
   public async getByRecipeId(recipeId: string): Promise<IComment[]> {
-    return this.model.find({ recipeId }).exec() as Promise<IComment[]>;
+    return this.model
+      .find({ recipeId })
+      .populate("userId", "username email avatar")
+      .exec() as Promise<IComment[]>;
   }
   public async getByAuthor(author: string): Promise<IComment[]> {
     return this.model.find({ author }).exec() as Promise<IComment[]>;
   }
-
 }

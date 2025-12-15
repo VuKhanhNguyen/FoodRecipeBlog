@@ -243,20 +243,6 @@ const RecipeForm = ({ formData, setFormData }) => {
           </div>
           <div className="col-md-4">
             <div className="form-group">
-              <label htmlFor="calories">Calories</label>
-              <input
-                type="number"
-                id="calories"
-                name="calories"
-                className="form-control"
-                placeholder="VD: 350"
-                value={formData.calories}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
               <label htmlFor="difficulty">Độ khó</label>
               <select
                 id="difficulty"
@@ -273,6 +259,100 @@ const RecipeForm = ({ formData, setFormData }) => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Nutrition Information Section */}
+      <div className="recipe-submit-section">
+        <h4 className="section-title">Thông tin dinh dưỡng (mỗi khẩu phần)</h4>
+        <div className="row">
+          <div className="col-md-4">
+            <div className="form-group">
+              <label htmlFor="calories">
+                Calories (kcal) <span className="text-muted">*</span>
+              </label>
+              <input
+                type="number"
+                id="calories"
+                name="calories"
+                className="form-control"
+                placeholder="VD: 350"
+                min="0"
+                step="0.1"
+                value={formData.calories}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="form-group">
+              <label htmlFor="protein">Protein (g)</label>
+              <input
+                type="number"
+                id="protein"
+                name="protein"
+                className="form-control"
+                placeholder="VD: 25"
+                min="0"
+                step="0.1"
+                value={formData.protein || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="form-group">
+              <label htmlFor="carbs">Carbs (g)</label>
+              <input
+                type="number"
+                id="carbs"
+                name="carbs"
+                className="form-control"
+                placeholder="VD: 45"
+                min="0"
+                step="0.1"
+                value={formData.carbs || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="fat">Chất béo (g)</label>
+              <input
+                type="number"
+                id="fat"
+                name="fat"
+                className="form-control"
+                placeholder="VD: 15"
+                min="0"
+                step="0.1"
+                value={formData.fat || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="fiber">Chất xơ (g)</label>
+              <input
+                type="number"
+                id="fiber"
+                name="fiber"
+                className="form-control"
+                placeholder="VD: 8"
+                min="0"
+                step="0.1"
+                value={formData.fiber || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <small className="form-text text-muted">
+          * Calories là thông tin bắt buộc. Các thông tin khác là tùy chọn.
+        </small>
       </div>
 
       {/* Ingredients Section */}

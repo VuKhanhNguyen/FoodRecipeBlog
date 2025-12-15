@@ -38,6 +38,14 @@ const EntryContent = ({ recipeData }) => {
           {" "}
           <i className="far fa-clock"></i> {getTotalTime()} minutes
         </a>
+        <a href="#">
+          {" "}
+          <i className="far fa-eye"></i> {recipeData.views || 0} Views
+        </a>
+        <a href="#">
+          {" "}
+          <i className="far fa-heart"></i> {recipeData.likes || 0} Likes
+        </a>
       </span>
 
       {/* Category Badge */}
@@ -217,27 +225,23 @@ const EntryContent = ({ recipeData }) => {
             <ul>
               <li>
                 {" "}
-                Calories <span>{recipeData.calories || "N/A"}</span>{" "}
+                Lượng calo: <span>{recipeData.calories || "N/A"}g</span>{" "}
               </li>
               <li>
                 {" "}
-                Protein <span>22.5g</span>{" "}
+                Chất đạm: <span>{recipeData.protein || "N/A"}g</span>{" "}
               </li>
               <li>
                 {" "}
-                Carbs <span>45g</span>{" "}
+                Chất bột đường: <span>{recipeData.carbs || "N/A"}g</span>{" "}
               </li>
               <li>
                 {" "}
-                Fat <span>12g</span>{" "}
+                Chất béo: <span>{recipeData.fat || "N/A"}g</span>{" "}
               </li>
               <li>
                 {" "}
-                Fiber <span>5g</span>{" "}
-              </li>
-              <li>
-                {" "}
-                Sugar <span>8g</span>{" "}
+                Chất xơ: <span>{recipeData.fiber || "N/A"}g</span>{" "}
               </li>
             </ul>
           </div>

@@ -1,44 +1,74 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import EntryContent from "./EntryContent";
+import CommentForm from "./CommentForm";
 import recipe1 from "../../assets/img/recipe/1.jpg";
 
-const Content = () => {
-  // Dữ liệu giả định - khớp với format từ SubmitBlogRecipePage
+const Content = ({ recipe, commentsCount = 0 }) => {
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (recipe?._id) {
+      fetchComments(recipe._id);
+    }
+  }, [recipe?._id]);
+
+  const fetchComments = async (recipeId) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:5000/api/comments/recipe/${recipeId}`
+      );
+      const data = await response.json();
+      setComments(data.comments || []);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      setComments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!recipe) {
+    return <div>Đang tải...</div>;
+  }
+
+  // Map API data to component format
   const recipeData = {
-    recipeName: "Bánh Mì Thịt Nướng Siu Chèf",
-    category: "Bữa sáng",
-    description:
-      "<p>Món <strong>bánh mì thịt nướng</strong> truyền thống Việt Nam với hương vị đặc trưng. Thịt nướng thơm phức, bánh mì giòn rụm kết hợp với rầu sống tươi ngon tạo nên món ăn <em>hấp dẫn</em> cho bữa sáng hoặc bữa trưa.</p><p>Công thức này được truyền từ nhiều thế hệ và đã được cải tiến để phù hợp với khẩu vị hiện đại.</p>",
-    prepTime: "30",
-    cookTime: "45",
-    servings: "4",
-    calories: "450",
-    difficulty: "medium",
-    ingredients: [
-      "500g thịt ba chỉ hoặc thịt vai",
-      "4 đôi bánh mì Việt Nam",
-      "2 muỗng canh sốt tương",
-      "2 muỗng canh mật ong",
-      "3 tép tỏi băm",
-      "1 muỗng canh dầu hào",
-      "Rầu sống (xà lách, dưa leo, cà rốt, ngò)",
-      "Pa-tê gan tùy ý",
-      "ớt, tiêu, đường",
-      "Xì dầu, nước măm",
-    ],
-    directions: [
-      "<p><strong>Chuẩn bị thịt:</strong> Thái thịt thành lát mỏng vừa phải. Ước thịt với sốt tương, mật ong, tỏi băm, dầu hào, xì dầu, đường, tiêu trong 2 giờ.</p>",
-      "<p><strong>Nướng thịt:</strong> Đun nóng chảo hoặc vỉ nướng. Nướng thịt trên lửa vừa đến khi 2 mặt thịt chín vàng đều, khoảng 5-7 phút mỗi mặt.</p>",
-      "<p><strong>Chuẩn bị bánh mì:</strong> Rạch dọc bánh mì, nướng lò hoặc chảo cho giòn. Bôi pa-tê vào trong bánh.</p>",
-      "<p><strong>Lắp ráp:</strong> Xếp thịt nướng vào bánh, thêm rầu sống, dưa leo, cà rốt thái lát. Rưới thêm chút nước măm pha loãng và tương ớt nếu thích매운.</p>",
-      "<p><strong>Thưởng thức:</strong> Ăn nóng ngay khi vừa làm xong để cảm nhận hương vị <em>ngon nhất</em>!</p>",
-    ],
-    tags: "món Việt, bánh mì, bữa sáng, dễ làm, tiết kiệm",
-    recipeImage: recipe1,
-    author: "Chef Michel",
-    comments: 12,
-    rating: 4.5,
-    date: { day: "25", month: "Dec" },
+    recipeName: recipe.title || "Không có tên",
+    category: recipe.category?.name || "Chưa phân loại",
+    description: recipe.description || "Không có mô tả",
+    prepTime: recipe.prepTime?.toString() || "0",
+    cookTime: recipe.cookTime?.toString() || "0",
+    servings: recipe.servings?.toString() || "1",
+    calories: recipe.nutritionInfo?.calories?.toString() || "0",
+    protein: recipe.nutritionInfo?.protein?.toString() || "0",
+    carbs: recipe.nutritionInfo?.carbs?.toString() || "0",
+    fat: recipe.nutritionInfo?.fat?.toString() || "0",
+    fiber: recipe.nutritionInfo?.fiber?.toString() || "0",
+    difficulty: recipe.difficulty || "medium",
+    ingredients: recipe.ingredients || [],
+    directions: recipe.instructions || [],
+    tags: Array.isArray(recipe.tags)
+      ? recipe.tags.join(", ")
+      : recipe.tags || "",
+    recipeImage:
+      recipe.images && recipe.images.length > 0 ? recipe.images[0] : recipe1,
+    author: recipe.author?.username || "Anonymous",
+    comments: commentsCount,
+    rating: recipe.rating || 0,
+    likes: recipe.likes || 0,
+    views: recipe.views || 0,
+    date: {
+      day: recipe.createdAt
+        ? new Date(recipe.createdAt).getDate().toString()
+        : "01",
+      month: recipe.createdAt
+        ? new Date(recipe.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+          })
+        : "Jan",
+    },
   };
 
   return (
@@ -69,6 +99,11 @@ const Content = () => {
 
       {/* Entry Content Component - truyền data xuống */}
       <EntryContent recipeData={recipeData} />
+      {loading ? (
+        <div>Đang tải bình luận...</div>
+      ) : (
+        <CommentForm comments={comments} />
+      )}
     </div>
   );
 };

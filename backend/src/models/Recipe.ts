@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types } from "mongoose";
 
 export interface IRecipe {
   _id: Types.ObjectId;
@@ -13,7 +13,7 @@ export interface IRecipe {
   cookTime?: number;
   servings?: number;
 
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: "easy" | "medium" | "hard";
 
   category: Types.ObjectId;
   author: Types.ObjectId;
@@ -24,10 +24,17 @@ export interface IRecipe {
   views?: number;
   likes?: number;
 
+  nutritionInfo?: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
+    fiber?: number;
+  };
+
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 
 const RecipeSchema = new Schema<IRecipe>(
   {
@@ -63,18 +70,18 @@ const RecipeSchema = new Schema<IRecipe>(
     },
     difficulty: {
       type: String,
-      enum: ['easy', 'medium', 'hard'],
-      default: 'easy',
+      enum: ["easy", "medium", "hard"],
+      default: "easy",
     },
 
     category: {
       type: Types.ObjectId,
-      ref: 'Category',
+      ref: "Category",
       required: true,
     },
     author: {
       type: Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     images: {
@@ -86,6 +93,7 @@ const RecipeSchema = new Schema<IRecipe>(
       type: [String],
       default: [],
     },
+
     views: {
       type: Number,
       default: 0,
@@ -94,14 +102,21 @@ const RecipeSchema = new Schema<IRecipe>(
       type: Number,
       default: 0,
     },
+    nutritionInfo: {
+      calories: { type: Number, default: 0 },
+      protein: { type: Number, default: 0 },
+      carbs: { type: Number, default: 0 },
+      fat: { type: Number, default: 0 },
+      fiber: { type: Number, default: 0 },
+    },
   },
   {
     timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
-RecipeSchema.index({ title: 'text', tags: 'text' });
+RecipeSchema.index({ title: "text", tags: "text" });
 RecipeSchema.index({ category: 1 });
 
-export const RecipeModel = model<IRecipe>('Recipe', RecipeSchema);
+export const RecipeModel = model<IRecipe>("Recipe", RecipeSchema);
