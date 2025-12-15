@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import cate9 from "../../assets/img/categories/9.jpg";
 
 const RecipeCategories = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,8 +18,7 @@ const RecipeCategories = () => {
           throw new Error("Không thể tải danh mục");
         }
         const data = await response.json();
-        console.log("Categories data:", data.categories); // Debug: kiểm tra data
-        console.log("Number of categories:", data.categories.length); // Debug: đếm số lượng
+
         setCategories(data.categories);
       } catch (err) {
         setError(err.message);
@@ -37,12 +38,19 @@ const RecipeCategories = () => {
   if (error) {
     return <div className="col-md-12">Lỗi: {error}</div>;
   }
-  console.log("Rendering categories:", categories.length); // Debug: kiểm tra khi render
+
   return (
     <>
       {categories.map((category) => (
         <div key={category._id} className="col-md-4 col-sm-6">
-          <a href="recipe-grid.html" className="metro_recipe-category">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/recipe-grid/${encodeURIComponent(category.name)}`);
+            }}
+            className="metro_recipe-category"
+          >
             <div className="metro_recipe-category-thumb category-thumb-fixed">
               <img src={category.image || cate9} alt={category.name} />
             </div>

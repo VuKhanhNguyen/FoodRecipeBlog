@@ -1,46 +1,103 @@
-import React from 'react';
-import recipe1 from '../../assets/img/recipes/1.jpg';
-import recipe2 from '../../assets/img/recipes/2.jpg';
-import recipe3 from '../../assets/img/recipes/3.jpg';
-import recipe4 from '../../assets/img/recipes/4.jpg';
-import { useNavigate } from 'react-router-dom';
-import RecipeDetailPage from '../../pages/RecipeDetailPage.jsx';
-
-const RecipeCard = ({recipeId}) => {
+import React from "react";
+import recipe1 from "../../assets/img/recipes/1.jpg";
+import { useNavigate } from "react-router-dom";
+import "../../assets/css/recipeCard.css";
+const RecipeCard = ({ recipe }) => {
   const navigate = useNavigate();
 
-  const handleRecipeClick = () => {
-    navigate(`/recipe/${recipeId || 1}`);
+  // Fallback data nếu không có recipe prop
+  const defaultRecipe = {
+    _id: "1",
+    title: "Cheese Burger With a Touch of Curry and Cumin",
+    description:
+      "Cras ultricies ligula sed magna dictum porta. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.",
+    image: recipe1,
+    cookTime: "45",
+    difficulty: "Chuyên gia",
+    rating: 4,
   };
 
-  const handleExpertClick = (e) => {
+  const recipeData = recipe || defaultRecipe;
+
+  const handleRecipeClick = (e) => {
     e.preventDefault();
-    navigate('/recipe-detail');
+    navigate(`/recipe/${recipeData._id}`);
   };
+
+  const handleDifficultyClick = (e) => {
+    e.preventDefault();
+    // Navigate to recipe detail or filter by difficulty
+  };
+
+  // Render rating stars
+  const renderStars = (rating = 0) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <i key={i} className={`fa fa-star ${i <= rating ? "active" : ""}`}></i>
+      );
+    }
+    return stars;
+  };
+
+  const getImageUrl = () => {
+    // Kiểm tra nếu có images array và có ít nhất 1 ảnh
+    if (
+      recipeData.images &&
+      recipeData.images.length > 0 &&
+      recipeData.images[0]
+    ) {
+      return recipeData.images[0];
+    }
+    // Fallback về ảnh mặc định
+    return recipe1;
+  };
+
+  // Debug: log ra để kiểm tra
+  console.log("Recipe image:", recipeData.image);
+  console.log("Using image URL:", getImageUrl());
+
   return (
-                <article className="metro_post metro_recipe">
-                  <div className="metro_post-thumb">
-                    <a href="#" onClick={handleRecipeClick}>
-                      <img src={recipe1} alt="recipe"/>
-                    </a>
-                  </div>
-                  <div className="metro_post-body">
-                    <div className="metro_post-desc">
-                      <span className="metro_post-meta"> <a href="#"> <i className="far fa-clock"></i> 45 phút </a> <a href="#" onClick={handleExpertClick}> <i className="far fa-knife-kitchen"></i> Chuyên gia</a> </span>
-                      <h5> <a href="recipe-details.html">Cheese Burger With a Touch of Curry and Cumin</a> </h5>
-                      <p>Cras ultricies ligula sed magna dictum porta. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.</p>
-                    </div>
-                    <div className="metro_rating mb-0">
-                      <i className="fa fa-star active"></i>
-                      <i className="fa fa-star active"></i>
-                      <i className="fa fa-star active"></i>
-                      <i className="fa fa-star active"></i>
-                      <i className="fa fa-star"></i>
-                    </div>
-                  </div>
-                </article>
-           
-              
-          );
-          };
+    <article className="metro_post metro_recipe">
+      <div className="metro_post-thumb">
+        <a href="#" onClick={handleRecipeClick}>
+          <img
+            src={getImageUrl()}
+            alt={recipeData.title}
+            onError={(e) => {
+              // Nếu ảnh lỗi, dùng ảnh mặc định
+              e.target.src = recipe1;
+            }}
+          />
+        </a>
+      </div>
+      <div className="metro_post-body">
+        <div className="metro_post-desc">
+          <span className="metro_post-meta">
+            <a href="#">
+              <i className="far fa-clock"></i> {recipeData.cookTime || "45"}{" "}
+              phút
+            </a>
+            <a href="#" onClick={handleDifficultyClick}>
+              <i className="far fa-knife-kitchen"></i>{" "}
+              {recipeData.difficulty || "Chuyên gia"}
+            </a>
+          </span>
+          <h5>
+            <a href="#" onClick={handleRecipeClick}>
+              {recipeData.title}
+            </a>
+          </h5>
+          <p>
+            {recipeData.description || recipeData.summary || "Không có mô tả"}
+          </p>
+        </div>
+        <div className="metro_rating mb-0">
+          {renderStars(recipeData.rating)}
+        </div>
+      </div>
+    </article>
+  );
+};
+
 export default RecipeCard;

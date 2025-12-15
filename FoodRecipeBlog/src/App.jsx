@@ -23,6 +23,7 @@ function App() {
         <Route path="/recipe/:id" element={<RecipeDetailPage />} />
         <Route path="/recipe-categories" element={<RecipeCategoriesPage />} />
         <Route path="/recipe-grid" element={<RecipeGridPage />} />
+        <Route path="/recipe-grid/:categoryName" element={<RecipeGridPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/recipe-submit" element={<SubmitBlogRecipePage />} />

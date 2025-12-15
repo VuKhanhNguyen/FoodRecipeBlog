@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
-import { IBaseRepo } from './BaseRepo';
-import { IRecipe, RecipeModel } from '@src/models/Recipe';
+import { IBaseRepo } from "./BaseRepo";
+import { IRecipe, RecipeModel } from "@src/models/Recipe";
+import { CategoryModel } from "@src/models/Category";
 
 export interface IRecipeRepo extends IBaseRepo<IRecipe> {
   getByTitle: (title: string) => Promise<IRecipe | null>;
@@ -15,21 +16,36 @@ export class RecipeRepo implements IRecipeRepo {
   private model = RecipeModel;
 
   public async getAll(): Promise<IRecipe[]> {
-    return this.model.find({}).exec() as Promise<IRecipe[]>;
+    return this.model
+      .find({})
+      .populate("category", "name description image")
+      .populate("author", "username email")
+      .exec() as Promise<IRecipe[]>;
   }
 
   public async getById(id: string): Promise<IRecipe | null> {
-    return this.model.findById(id).exec() as Promise<IRecipe | null>;
+    return this.model
+      .findById(id)
+      .populate("category", "name description image")
+      .populate("author", "username email")
+      .exec() as Promise<IRecipe | null>;
   }
 
-  public async add(data: Omit<IRecipe, '_id' | 'createdAt' | 'updatedAt' | 'views' | 'likes'>): Promise<IRecipe> {
+  public async add(
+    data: Omit<IRecipe, "_id" | "createdAt" | "updatedAt" | "views" | "likes">
+  ): Promise<IRecipe> {
     const newRecipe = new this.model(data);
 
     return newRecipe.save() as Promise<IRecipe>;
   }
 
-  public async update(id: string, data: Partial<IRecipe>): Promise<IRecipe | null> {
-    return this.model.findByIdAndUpdate(id, data, { new: true }).exec() as Promise<IRecipe | null>;
+  public async update(
+    id: string,
+    data: Partial<IRecipe>
+  ): Promise<IRecipe | null> {
+    return this.model
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec() as Promise<IRecipe | null>;
   }
 
   public async delete(id: string): Promise<boolean> {
@@ -42,7 +58,9 @@ export class RecipeRepo implements IRecipeRepo {
   }
 
   public async getByIngredient(ingredient: string): Promise<IRecipe[]> {
-    return this.model.find({ ingredients: ingredient }).exec() as Promise<IRecipe[]>;
+    return this.model.find({ ingredients: ingredient }).exec() as Promise<
+      IRecipe[]
+    >;
   }
 
   public async getByTag(tag: string): Promise<IRecipe[]> {
@@ -54,11 +72,19 @@ export class RecipeRepo implements IRecipeRepo {
   }
 
   public async getByCategory(category: string): Promise<IRecipe[]> {
-    return this.model.find({ category }).exec() as Promise<IRecipe[]>;
+    const categoryDoc = await CategoryModel.findOne({ name: category }).exec();
+    if (!categoryDoc) {
+      return []; // Trả về mảng rỗng nếu không tìm thấy category
+    }
+
+    return this.model
+      .find({ category: categoryDoc._id })
+      .populate("category", "name description image")
+      .populate("author", "username email")
+      .exec() as Promise<IRecipe[]>;
   }
 
   public async getByDifficulty(difficulty: string): Promise<IRecipe[]> {
     return this.model.find({ difficulty }).exec() as Promise<IRecipe[]>;
   }
-
 }
