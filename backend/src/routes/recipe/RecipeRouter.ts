@@ -176,7 +176,25 @@ recipeRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const recipe = await RecipeService.getOne(id);
-    return res.status(HTTP_STATUS_CODES.Ok).json({ recipe });
+
+    if (!recipe) {
+      return res.status(HTTP_STATUS_CODES.NotFound).json({
+        error: "Công thức không tìm thấy. | 404",
+      });
+    }
+
+    // Tính average rating
+    const averageRating = await RecipeService.calculateAverageRating(id);
+
+    // Convert to plain object
+    const recipeData = JSON.parse(JSON.stringify(recipe));
+
+    return res.status(HTTP_STATUS_CODES.Ok).json({
+      recipe: {
+        ...recipeData,
+        rating: averageRating,
+      },
+    });
   } catch (error) {
     logger.err(error, true);
     if (error instanceof RouteError) {

@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
-import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
-import { RouteError } from '@src/common/util/route-errors';
-import { ICommentRepo, CommentRepo } from '@src/repos/CommentRepo';
-import { IComment } from '@src/models/Comment';
+import HTTP_STATUS_CODES from "@src/common/constants/HTTP_STATUS_CODES";
+import { RouteError } from "@src/common/util/route-errors";
+import { ICommentRepo, CommentRepo } from "@src/repos/CommentRepo";
+import { IComment } from "@src/models/Comment";
 
-export const COMMENT_NOT_FOUND_ERR = 'Comment not found';
+export const COMMENT_NOT_FOUND_ERR = "Comment not found";
 
 export class CommentService {
   private commentRepo: ICommentRepo = new CommentRepo();
@@ -16,10 +16,7 @@ export class CommentService {
   public async getOne(id: string): Promise<IComment | null> {
     const comment = await this.commentRepo.getById(id);
     if (!comment) {
-      throw new RouteError(
-        HTTP_STATUS_CODES.NotFound,
-        COMMENT_NOT_FOUND_ERR,
-      );
+      throw new RouteError(HTTP_STATUS_CODES.NotFound, COMMENT_NOT_FOUND_ERR);
     }
     return comment;
   }
@@ -32,17 +29,19 @@ export class CommentService {
     return this.commentRepo.getByRecipeId(recipeId);
   }
 
-  public async createComment(commentData: Omit<IComment, '_id' | 'createdAt' | 'updatedAt'>): Promise<IComment> {
+  public async createComment(
+    commentData: Omit<IComment, "_id" | "createdAt" | "updatedAt">
+  ): Promise<IComment> {
     return this.commentRepo.add(commentData);
   }
 
-  public async updateComment(id: string, commentData: Partial<IComment>): Promise<IComment | null> {
+  public async updateComment(
+    id: string,
+    commentData: Partial<IComment>
+  ): Promise<IComment | null> {
     const comment = await this.commentRepo.getById(id);
     if (!comment) {
-      throw new RouteError(
-        HTTP_STATUS_CODES.NotFound,
-        COMMENT_NOT_FOUND_ERR,
-      );
+      throw new RouteError(HTTP_STATUS_CODES.NotFound, COMMENT_NOT_FOUND_ERR);
     }
     return this.commentRepo.update(id, commentData);
   }
@@ -50,10 +49,7 @@ export class CommentService {
   public async deleteComment(id: string): Promise<void> {
     const comment = await this.commentRepo.getById(id);
     if (!comment) {
-      throw new RouteError(
-        HTTP_STATUS_CODES.NotFound,
-        COMMENT_NOT_FOUND_ERR,
-      );
+      throw new RouteError(HTTP_STATUS_CODES.NotFound, COMMENT_NOT_FOUND_ERR);
     }
     await this.commentRepo.delete(id);
   }

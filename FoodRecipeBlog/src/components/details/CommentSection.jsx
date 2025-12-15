@@ -42,23 +42,20 @@ const CommentSection = ({ recipeId }) => {
         recipeId={recipeId}
         onCommentAdded={handleCommentAdded}
       />
-
       {/* Hiển thị lỗi nếu có */}
       {error && (
         <div className="alert alert-danger" style={{ marginTop: "20px" }}>
           {error}
         </div>
       )}
-
       {/* Loading state */}
       {loading && (
         <div style={{ textAlign: "center", padding: "20px" }}>
           Đang tải bình luận...
         </div>
       )}
-
       {/* Danh sách comments */}
-      {!loading && <CommentForm comments={comments} />}
+      {/* {!loading && <CommentForm comments={comments} />} */}
     </div>
   );
 };

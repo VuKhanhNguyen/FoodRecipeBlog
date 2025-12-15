@@ -23,7 +23,7 @@ export interface IRecipe {
 
   views?: number;
   likes?: number;
-
+  rating?: number;
   nutritionInfo?: {
     calories?: number;
     protein?: number;
@@ -101,6 +101,12 @@ const RecipeSchema = new Schema<IRecipe>(
     likes: {
       type: Number,
       default: 0,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
     },
     nutritionInfo: {
       calories: { type: Number, default: 0 },
