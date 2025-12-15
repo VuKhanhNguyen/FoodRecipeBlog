@@ -6,6 +6,7 @@ import { Router, Request, Response } from 'express';
 import logger from 'jet-logger';
 import { ICreateCategoryReqBody, IUpdateCategoryReqBody } from './types';
 import { authenticateToken } from '@src/middleware/auth';
+import { IRequestWithUser } from '@src/middleware/types';
 
 const categoryRouter = Router();
 
@@ -51,9 +52,13 @@ categoryRouter.post('/', authenticateToken, async (req: Request<object, object, 
   try {
     const data = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const user = (req as any).user;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+
     if (user.role !== 'admin') {
       return res.status(HTTP_STATUS_CODES.Forbidden).json({ error: 'Chỉ quản trị viên mới có thể tạo danh mục | 403' });
     }
@@ -72,9 +77,13 @@ categoryRouter.put('/:id', async (req: Request<{ id: string }, object, IUpdateCa
     const { id } = req.params;
     const cateData = req.body;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const user = (req as any).user;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+
     if (user.role !== 'admin') {
       return res.status(HTTP_STATUS_CODES.Forbidden).json({ error: 'Chỉ quản trị viên mới có thể cập nhật danh mục | 403' });
     }
@@ -94,9 +103,13 @@ categoryRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
   try {
     const { id } = req.params;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const user = (req as any).user;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const user = (req as Request & IRequestWithUser).user;
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+
     if (user.role !== 'admin') {
       return res.status(HTTP_STATUS_CODES.Forbidden).json({ error: 'Chỉ quản trị viên mới có thể xóa danh mục | 403' });
     }

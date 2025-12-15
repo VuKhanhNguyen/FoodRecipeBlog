@@ -5,6 +5,9 @@ import UserService from '@src/services/UserService';
 import { IUpdateUserReqBody } from './types';
 import logger from 'jet-logger';
 import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
+import { authenticateToken } from '@src/middleware/auth';
+import { Types } from 'mongoose';
+import { IRequestWithUser } from '@src/middleware/types';
 
 
 /******************************************************************************
@@ -16,7 +19,7 @@ const userRouter = Router();
                                 Functions
 ******************************************************************************/
 
-userRouter.get('/all', async (_: Request, res: Response) => {
+userRouter.get('/all', authenticateToken, async (_: Request, res: Response) => {
   try {
     const users = await UserService.getAll();
     return res.status(HTTP_STATUS_CODES.Ok).json({ users });
@@ -26,7 +29,7 @@ userRouter.get('/all', async (_: Request, res: Response) => {
   }
 });
 
-userRouter.get('/username/:username', async (req: Request, res: Response) => {
+userRouter.get('/username/:username', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
     const user = await UserService.getOneByUsername(username);
@@ -43,7 +46,7 @@ userRouter.get('/username/:username', async (req: Request, res: Response) => {
   }
 });
 
-userRouter.get('/:id', async (req: Request, res: Response) => {
+userRouter.get('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -61,15 +64,31 @@ userRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-userRouter.put('/:id', async (req: Request<{ id: string }, object, IUpdateUserReqBody>, res: Response) => {
+userRouter.put('/:id', authenticateToken, async (req: Request<{ id: string }, object, IUpdateUserReqBody>, res: Response) => {
   try {
     const { id } = req.params;
     const userData = req.body;
 
-    // Kiểm tra body có dữ liệu không
-    if (Object.keys(userData).length === 0) {
-      return res.status(HTTP_STATUS_CODES.BadRequest).json({
-        error: 'Không có dữ liệu cập nhật.',
+    const requestWithUser = req as Request & IRequestWithUser;
+
+    if (requestWithUser.user == null) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+
+    const userIdFromToken = requestWithUser.user.id;
+
+    const user = await UserService.getOne(id);
+    if (!user) {
+      return res.status(HTTP_STATUS_CODES.NotFound).json({
+        error: 'Người dùng không tồn tại.',
+      });
+    }
+
+    if (user._id !== new Types.ObjectId(userIdFromToken)) {
+      return res.status(HTTP_STATUS_CODES.Forbidden).json({
+        error: 'Bạn không có quyền cập nhật người dùng này.',
       });
     }
 
@@ -94,9 +113,25 @@ userRouter.put('/:id', async (req: Request<{ id: string }, object, IUpdateUserRe
 });
 
 
-userRouter.delete('/:id', async (req: Request, res: Response) => {
+userRouter.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    const requestWithUser = req as Request & IRequestWithUser;
+
+    if (requestWithUser.user == null) {
+      return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+        error: 'Bạn cần đăng nhập để thực hiện hành động này.',
+      });
+    }
+
+    const userIdFromToken = requestWithUser.user.id;
+    if (id !== userIdFromToken) {
+      return res.status(HTTP_STATUS_CODES.Forbidden).json({
+        error: 'Bạn không có quyền xóa người dùng này.',
+      });
+    }
+
 
     // Gọi Service để xóa
     await UserService.delete(id);
