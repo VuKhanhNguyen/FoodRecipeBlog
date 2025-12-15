@@ -4,17 +4,21 @@ import category3 from "../../assets/img/categories/3.jpg";
 import category2 from "../../assets/img/categories/2.jpg";
 import HomePage from "../../pages/HomePage";
 import { Link, useNavigate } from "react-router-dom";
+import authService from "../../services/authService";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // Kiểm tra trạng thái đăng nhập
-    const username = localStorage.getItem("username");
-    setIsLoggedIn(!!username);
+    // Kiểm tra trạng thái đăng nhập bằng authService
+    const authenticated = authService.isAuthenticated();
+    const user = authService.getCurrentUser();
+    setIsLoggedIn(authenticated);
+    setCurrentUser(user);
 
     // Đóng dropdown khi click bên ngoài
     const handleClickOutside = (event) => {
@@ -64,11 +68,12 @@ const Header = () => {
   const handleLogout = () => {
     const confirmLogout = window.confirm("Bạn có muốn đăng xuất không?");
     if (confirmLogout) {
-      localStorage.removeItem("username");
+      authService.logout();
       setIsLoggedIn(false);
+      setCurrentUser(null);
       setShowDropdown(false);
       alert("Đăng xuất thành công!");
-      navigate("/");
+      // authService.logout() đã tự động redirect về /login
     }
   };
 
@@ -127,7 +132,9 @@ const Header = () => {
                   className="metro_btn-custom"
                 >
                   <i className="fa fa-user"></i>{" "}
-                  {localStorage.getItem("username") || "Đăng nhập"}
+                  {currentUser?.username ||
+                    currentUser?.fullName ||
+                    "Đăng nhập"}
                   {isLoggedIn && (
                     <i
                       className="fa fa-chevron-down"

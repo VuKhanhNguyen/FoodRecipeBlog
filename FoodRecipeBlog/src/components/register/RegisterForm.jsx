@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../../services/authService";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
     fullName: "",
+    avatar: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,31 +46,17 @@ const RegisterForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          fullName: formData.fullName || undefined,
-        }),
+      await authService.register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName || undefined,
+        avatar: formData.avatar || "",
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Đăng ký thất bại");
-      }
-
-      // Lưu token và thông tin user
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
       // Chuyển hướng về trang chủ
-      window.location.href = "/";
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {

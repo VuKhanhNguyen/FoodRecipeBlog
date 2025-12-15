@@ -14,8 +14,7 @@ import FeaturedRecipe from "../components/home/FeaturedRecipe";
 import Pagination from "../components/common/Pagination";
 import RecipeDetailBanner from "../components/otherBanner/RecipeDetailBanner.jsx";
 import Content from "../components/details/Content.jsx";
-import Comment from "../components/details/Comment.jsx";
-import CommentForm from "../components/details/CommentForm.jsx";
+import CommentSection from "../components/details/CommentSection.jsx";
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -181,7 +180,8 @@ const RecipeDetailPage = () => {
               {/* Content Component */}
               <Content recipe={recipe} commentsCount={comments.length} />
 
-              <Comment />
+              {/* Comment Section with JWT Auth */}
+              <CommentSection recipeId={recipe._id} />
             </div>
             <SidebarCTA2 />
           </div>

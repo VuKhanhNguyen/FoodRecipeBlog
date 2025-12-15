@@ -41,6 +41,29 @@ const CommentForm = ({ comments = [] }) => {
             <div className="comment-body">
               <h5>{comment.userId?.username || "Anonymous"}</h5>
               <span>{formatDate(comment.createdAt)}</span>
+              {comment.rating && (
+                <div className="comment-rating" style={{ marginTop: "5px" }}>
+                  {[...Array(5)].map((_, i) => (
+                    <i
+                      key={i}
+                      className={`fa${i < comment.rating ? "s" : "r"} fa-star`}
+                      style={{
+                        color: i < comment.rating ? "#ffc107" : "#ccc",
+                        fontSize: "14px",
+                      }}
+                    ></i>
+                  ))}
+                  <span
+                    style={{
+                      marginLeft: "8px",
+                      color: "#666",
+                      fontSize: "14px",
+                    }}
+                  >
+                    ({comment.rating}/5)
+                  </span>
+                </div>
+              )}
               <p>{comment.content}</p>
               <a href="#" className="btn-link">
                 {" "}

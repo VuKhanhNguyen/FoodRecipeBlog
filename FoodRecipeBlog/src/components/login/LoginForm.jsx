@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import authService from "../../services/authService";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -19,19 +20,18 @@ const LoginForm = () => {
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Kiểm tra đăng nhập
-    if (formData.username === "admin" && formData.password === "123456") {
-      // Lưu username vào localStorage
-      localStorage.setItem("username", formData.username);
+    try {
+      await authService.login(formData.username, formData.password);
       // Chuyển về trang chủ
       navigate("/");
       // Reload để cập nhật header
       window.location.reload();
-    } else {
-      setError("Tên đăng nhập hoặc mật khẩu không đúng!");
+    } catch (err) {
+      setError(err.message || "Tên đăng nhập hoặc mật khẩu không đúng!");
     }
   };
 
