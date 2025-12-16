@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import recipe1 from "../../assets/img/recipes/1.jpg";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/recipeCard.css";
+import recipeService from "../../services/recipeService";
 const RecipeCard = ({ recipe }) => {
   const navigate = useNavigate();
 
@@ -85,6 +86,37 @@ const RecipeCard = ({ recipe }) => {
     return num;
   };
 
+  // Like/Favorite state
+  const [isFavorite, setIsFavorite] = useState(!!recipe?.isFavorite);
+  const [likeCount, setLikeCount] = useState(Number(recipe?.likes || 0));
+  const [liking, setLiking] = useState(false);
+
+  const handleFavoriteClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!recipeData?._id || liking) return;
+
+    // Optimistic update
+    const nextIsFav = !isFavorite;
+    setIsFavorite(nextIsFav);
+    setLikeCount((c) => Math.max(0, c + (nextIsFav ? 1 : -1)));
+    setLiking(true);
+    try {
+      if (nextIsFav) {
+        await recipeService.addToFavorites(recipeData._id);
+      } else {
+        await recipeService.removeFromFavorites(recipeData._id);
+      }
+    } catch (err) {
+      // Revert on failure
+      setIsFavorite(!nextIsFav);
+      setLikeCount((c) => Math.max(0, c + (nextIsFav ? -1 : 1)));
+      alert(err?.message || "Không thể cập nhật yêu thích. Vui lòng thử lại.");
+    } finally {
+      setLiking(false);
+    }
+  };
+
   return (
     <article className="metro_post metro_recipe">
       <div className="metro_post-thumb">
@@ -125,9 +157,19 @@ const RecipeCard = ({ recipe }) => {
               <i className="far fa-eye"></i>{" "}
               {formatNumber(recipeData.views || 0)}
             </span>
-            <span className="metro_post-stat-item">
-              <i className="far fa-heart"></i>{" "}
-              {formatNumber(recipeData.likes || 0)}
+            <span
+              className="metro_post-stat-item"
+              onClick={handleFavoriteClick}
+              role="button"
+              aria-label={isFavorite ? "Bỏ yêu thích" : "Yêu thích"}
+              title={isFavorite ? "Bỏ yêu thích" : "Yêu thích"}
+              style={{
+                cursor: liking ? "not-allowed" : "pointer",
+                opacity: liking ? 0.6 : 1,
+              }}
+            >
+              <i className={(isFavorite ? "fas" : "far") + " fa-heart"}></i>{" "}
+              {formatNumber(likeCount)}
             </span>
           </div>
         </div>

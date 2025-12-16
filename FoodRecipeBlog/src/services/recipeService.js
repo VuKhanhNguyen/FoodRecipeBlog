@@ -100,14 +100,30 @@ class RecipeService {
 
   // Xóa khỏi favorites (yêu cầu authentication)
   async removeFromFavorites(recipeId) {
-    return this.fetchWithAuth(`${API_URL}/favorites/${recipeId}`, {
+    // Backend DELETE expects favoriteId, not recipeId. Find it from my-favorites.
+    const myFavorites = await this.getUserFavorites();
+    const favorites = myFavorites?.favorites || [];
+
+    const fav = favorites.find((f) => {
+      // recipeId may be a string or object with _id
+      const rid =
+        typeof f?.recipeId === "string" ? f.recipeId : f?.recipeId?._id;
+      return rid === recipeId;
+    });
+
+    if (!fav?._id) {
+      throw new Error("Không tìm thấy yêu thích để xóa cho công thức này");
+    }
+
+    return this.fetchWithAuth(`${API_URL}/favorites/${fav._id}`, {
       method: "DELETE",
     });
   }
 
-  // Lấy favorites của user (yêu cầu authentication)
+  // Lấy favorites của user hiện tại (yêu cầu authentication)
   async getUserFavorites() {
-    return this.fetchWithAuth(`${API_URL}/favorites/user`);
+    // Matches backend route GET /favorites/my-favorites
+    return this.fetchWithAuth(`${API_URL}/favorites/my-favorites`);
   }
 }
 
