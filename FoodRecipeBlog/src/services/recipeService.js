@@ -64,9 +64,19 @@ class RecipeService {
     });
   }
 
+  // Lấy tất cả categories
+  async getAllCategories() {
+    return this.fetchWithAuth(`${API_URL}/categories/all`);
+  }
+
   // Lấy recipes theo category
   async getRecipesByCategory(categoryId) {
     return this.fetchWithAuth(`${API_URL}/recipes/category/${categoryId}`);
+  }
+
+  // Lấy recipes theo author ID
+  async getRecipesByAuthor(authorId) {
+    return this.fetchWithAuth(`${API_URL}/recipes/author/${authorId}`);
   }
 
   // Thêm comment (yêu cầu authentication)

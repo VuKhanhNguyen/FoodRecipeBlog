@@ -31,7 +31,14 @@ const RecipePreview = ({ formData }) => {
       <div className="preview-body">
         {formData.recipeImage && (
           <div className="preview-image">
-            <img src={URL.createObjectURL(formData.recipeImage)} alt="Recipe" />
+            <img
+              src={
+                typeof formData.recipeImage === "string"
+                  ? formData.recipeImage
+                  : URL.createObjectURL(formData.recipeImage)
+              }
+              alt="Recipe"
+            />
           </div>
         )}
 

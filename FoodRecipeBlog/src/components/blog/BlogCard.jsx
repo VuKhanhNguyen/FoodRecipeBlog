@@ -62,8 +62,7 @@ const BlogCard = ({ blog, onEdit, onDelete }) => {
         <div className="blog-footer">
           <div className="blog-tags">
             {blog.tags &&
-              blog.tags
-                .split(",")
+              (Array.isArray(blog.tags) ? blog.tags : blog.tags.split(","))
                 .slice(0, 3)
                 .map((tag, index) => (
                   <span key={index} className="blog-tag">

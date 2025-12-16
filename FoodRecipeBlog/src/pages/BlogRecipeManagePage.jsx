@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import BlogList from "../components/blog/BlogList";
+import recipeService from "../services/recipeService";
+import authService from "../services/authService";
 import "../assets/css/blog_manage.css";
 
 const BlogRecipeManagePage = () => {
@@ -10,67 +12,36 @@ const BlogRecipeManagePage = () => {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    // Load blogs from localStorage
-    const savedBlogs = localStorage.getItem("blogs");
-    if (savedBlogs) {
-      setBlogs(JSON.parse(savedBlogs));
-    } else {
-      // Initialize with dummy data
-      const dummyBlogs = [
-        {
-          id: 1,
-          title: "Bí quyết làm Bánh Mì giòn ngon tại nhà",
-          category: "breakfast",
-          description:
-            "<p>Bánh mì Việt Nam nổi tiếng với vỏ giòn tan, ruột xốp mềm. Để có được ổ bánh mì hoàn hảo, bạn cần chú ý đến nhiệt độ lò nướng và thời gian nhào bột...</p>",
-          image: new URL("../assets/img/blog/1.jpg", import.meta.url).href,
-          author: "admin",
-          date: "15/12/2024",
-          tags: "bánh mì, bữa sáng, dễ làm",
-        },
-        {
-          id: 2,
-          title: "Top 10 món ăn Việt Nam được yêu thích nhất",
-          category: "main-course",
-          description:
-            "<p>Ẩm thực Việt Nam đa dạng và phong phú với nhiều món ăn đặc sắc. Từ Phở Hà Nội đến Bánh Xèo miền Trung, mỗi món đều mang hương vị riêng...</p>",
-          image: new URL("../assets/img/blog/2.jpg", import.meta.url).href,
-          author: "admin",
-          date: "14/12/2024",
-          tags: "món việt, top 10, ẩm thực",
-        },
-        {
-          id: 3,
-          title: "Cách nấu Phở bò chuẩn vị Hà Nội",
-          category: "main-course",
-          description:
-            "<p>Phở bò Hà Nội nổi tiếng với nước dùng trong vắt, thơm ngọt từ xương. Bí quyết nằm ở việc ninh xương đúng lửa và gia vị chuẩn chỉnh...</p>",
-          image: new URL("../assets/img/blog/3.jpg", import.meta.url).href,
-          author: "admin",
-          date: "13/12/2024",
-          tags: "phở, hà nội, truyền thống",
-        },
-        {
-          id: 4,
-          title: "Hướng dẫn làm Chè Thái mát lạnh cho mùa hè",
-          category: "dessert",
-          description:
-            "<p>Chè Thái là món tráng miệng hoàn hảo cho những ngày hè nóng nực. Với sự kết hợp của nhiều loại trái cây tươi và thạch rau câu...</p>",
-          image: new URL("../assets/img/blog/4.jpg", import.meta.url).href,
-          author: "admin",
-          date: "12/12/2024",
-          tags: "chè, tráng miệng, mùa hè",
-        },
-      ];
-      setBlogs(dummyBlogs);
-      localStorage.setItem("blogs", JSON.stringify(dummyBlogs));
-    }
-  }, []);
+    const fetchBlogs = async () => {
+      try {
+        const user = authService.getCurrentUser();
+        const userId = user?.id || user?._id;
+        if (userId) {
+          const data = await recipeService.getRecipesByAuthor(userId);
+          const formattedBlogs = data.recipes.map((blog) => ({
+            ...blog,
+            id: blog._id || blog.id,
+            category: blog.category?.name || blog.category,
+            author: blog.author?.username || blog.author,
+            image:
+              blog.images && blog.images.length > 0
+                ? blog.images[0]
+                : blog.image,
+            date: blog.createdAt
+              ? new Date(blog.createdAt).toLocaleDateString("vi-VN")
+              : blog.date,
+          }));
+          setBlogs(formattedBlogs);
+        } else {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      }
+    };
 
-  const saveBlogs = (updatedBlogs) => {
-    setBlogs(updatedBlogs);
-    localStorage.setItem("blogs", JSON.stringify(updatedBlogs));
-  };
+    fetchBlogs();
+  }, [navigate]);
 
   const handleCreate = () => {
     // Xóa blog đang chỉnh sửa và chuyển đến trang tạo mới
@@ -84,9 +55,14 @@ const BlogRecipeManagePage = () => {
     navigate("/recipe-submit");
   };
 
-  const handleDelete = (id) => {
-    const updatedBlogs = blogs.filter((b) => b.id !== id);
-    saveBlogs(updatedBlogs);
+  const handleDelete = async (id) => {
+    try {
+      await recipeService.deleteRecipe(id);
+      setBlogs(blogs.filter((b) => b.id !== id));
+    } catch (error) {
+      console.error("Failed to delete blog:", error);
+      alert("Không thể xóa blog. Vui lòng thử lại.");
+    }
   };
 
   return (

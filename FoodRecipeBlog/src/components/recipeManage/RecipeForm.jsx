@@ -1,34 +1,40 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 
-const RecipeForm = ({ formData, setFormData }) => {
+const RecipeForm = ({ formData, setFormData, categories }) => {
   // Cấu hình toolbar cho Rich Text Editor
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ color: [] }, { background: [] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ align: [] }],
-      ["link"],
-      ["clean"],
-    ],
-  };
+  const quillModules = useMemo(
+    () => ({
+      toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ color: [] }, { background: [] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }],
+        ["link"],
+        ["clean"],
+      ],
+    }),
+    []
+  );
 
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "color",
-    "background",
-    "list",
-    "bullet",
-    "align",
-    "link",
-  ];
+  const quillFormats = useMemo(
+    () => [
+      "header",
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "color",
+      "background",
+      "list",
+      "align",
+      "link",
+    ],
+    []
+  );
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -72,12 +78,14 @@ const RecipeForm = ({ formData, setFormData }) => {
   };
 
   const handleDirectionChange = (index, value) => {
-    const newDirections = [...formData.directions];
-    newDirections[index] = value;
-    setFormData((prev) => ({
-      ...prev,
-      directions: newDirections,
-    }));
+    setFormData((prev) => {
+      const newDirections = [...prev.directions];
+      newDirections[index] = value;
+      return {
+        ...prev,
+        directions: newDirections,
+      };
+    });
   };
 
   const addDirection = () => {
@@ -130,14 +138,24 @@ const RecipeForm = ({ formData, setFormData }) => {
             required
           >
             <option value="">Chọn danh mục</option>
-            <option value="appetizers">Khai vị</option>
-            <option value="main-course">Món chính</option>
-            <option value="dessert">Tráng miệng</option>
-            <option value="breakfast">Bữa sáng</option>
-            <option value="lunch">Bữa trưa</option>
-            <option value="dinner">Bữa tối</option>
-            <option value="snacks">Ăn vặt</option>
-            <option value="drinks">Đồ uống</option>
+            {categories && categories.length > 0 ? (
+              categories.map((cat) => (
+                <option key={cat._id || cat.id} value={cat._id || cat.id}>
+                  {cat.name}
+                </option>
+              ))
+            ) : (
+              <>
+                <option value="appetizers">Khai vị</option>
+                <option value="main-course">Món chính</option>
+                <option value="dessert">Tráng miệng</option>
+                <option value="breakfast">Bữa sáng</option>
+                <option value="lunch">Bữa trưa</option>
+                <option value="dinner">Bữa tối</option>
+                <option value="snacks">Ăn vặt</option>
+                <option value="drinks">Đồ uống</option>
+              </>
+            )}
           </select>
         </div>
 
@@ -148,9 +166,11 @@ const RecipeForm = ({ formData, setFormData }) => {
           <ReactQuill
             theme="snow"
             value={formData.description}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, description: value }))
-            }
+            onChange={(content, delta, source, editor) => {
+              if (source === "user") {
+                setFormData((prev) => ({ ...prev, description: content }));
+              }
+            }}
             modules={quillModules}
             formats={quillFormats}
             placeholder="Viết mô tả chi tiết về công thức của bạn..."
@@ -184,7 +204,11 @@ const RecipeForm = ({ formData, setFormData }) => {
           {formData.recipeImage && (
             <div className="image-preview">
               <img
-                src={URL.createObjectURL(formData.recipeImage)}
+                src={
+                  typeof formData.recipeImage === "string"
+                    ? formData.recipeImage
+                    : URL.createObjectURL(formData.recipeImage)
+                }
                 alt="Preview"
               />
             </div>
@@ -400,7 +424,11 @@ const RecipeForm = ({ formData, setFormData }) => {
                 <ReactQuill
                   theme="snow"
                   value={direction}
-                  onChange={(value) => handleDirectionChange(index, value)}
+                  onChange={(content, delta, source, editor) => {
+                    if (source === "user") {
+                      handleDirectionChange(index, content);
+                    }
+                  }}
                   modules={quillModules}
                   formats={quillFormats}
                   placeholder={`Mô tả bước ${index + 1}...`}

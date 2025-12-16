@@ -281,7 +281,11 @@ recipeRouter.put(
 
       const currentRecipe = await RecipeService.getOne(id);
 
-      if (currentRecipe?.author.toString() !== userId) {
+      // Safely get authorId, whether it's populated or just an ID
+      const author = currentRecipe?.author as any;
+      const authorId = author?._id ? author._id.toString() : author?.toString();
+
+      if (!currentRecipe || authorId !== userId) {
         return res.status(HTTP_STATUS_CODES.Forbidden).json({
           error: "Bạn không có quyền cập nhật công thức này | 403",
         });
@@ -328,7 +332,10 @@ recipeRouter.delete(
 
       const currentRecipe = await RecipeService.getOne(id);
 
-      if (currentRecipe?.author.toString() !== userId) {
+      const author = currentRecipe?.author as any;
+      const authorId = author?._id ? author._id.toString() : author?.toString();
+
+      if (authorId !== userId) {
         return res.status(HTTP_STATUS_CODES.Forbidden).json({
           error: "Bạn không có quyền xóa công thức này | 403",
         });

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import recipeService from "../../services/recipeService";
+import authService from "../../services/authService";
 
 const BlogForm = ({ blog, onSave, onCancel }) => {
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
-    category: "main-course",
+    category: "",
     description: "",
     image: "",
     author: localStorage.getItem("username") || "admin",
@@ -14,8 +17,23 @@ const BlogForm = ({ blog, onSave, onCancel }) => {
   });
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await recipeService.getAllCategories();
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+
     if (blog) {
-      setFormData(blog);
+      setFormData({
+        ...blog,
+        category: blog.category?._id || blog.category || "",
+        tags: Array.isArray(blog.tags) ? blog.tags.join(", ") : blog.tags || "",
+        image: (blog.images && blog.images[0]) || blog.image || "",
+      });
     }
   }, [blog]);
 
@@ -60,7 +78,7 @@ const BlogForm = ({ blog, onSave, onCancel }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title.trim()) {
@@ -73,13 +91,58 @@ const BlogForm = ({ blog, onSave, onCancel }) => {
       return;
     }
 
-    const blogData = {
-      ...formData,
-      id: blog ? blog.id : Date.now(),
-      date: blog ? blog.date : new Date().toLocaleDateString("vi-VN"),
+    if (!formData.category) {
+      alert("Vui lòng chọn danh mục!");
+      return;
+    }
+
+    const user = authService.getCurrentUser();
+    if (!user) {
+      alert("Vui lòng đăng nhập!");
+      return;
+    }
+
+    const tagsArray = formData.tags
+      ? (Array.isArray(formData.tags)
+          ? formData.tags
+          : formData.tags.split(",")
+        )
+          .map((t) => t.trim())
+          .filter((t) => t)
+      : [];
+
+    const recipeData = {
+      title: formData.title,
+      category: formData.category,
+      description: formData.description,
+      images: formData.image ? [formData.image] : [],
+      tags: tagsArray,
+      // Default values for required fields in Recipe model if not present in BlogForm
+      prepTime: 0,
+      cookTime: 0,
+      servings: 0,
+      difficulty: "medium",
+      ingredients: [],
+      instructions: [],
+      nutritionInfo: {},
     };
 
-    onSave(blogData);
+    try {
+      if (blog) {
+        await recipeService.updateRecipe(blog.id || blog._id, recipeData);
+        alert("Cập nhật blog thành công!");
+      } else {
+        await recipeService.createRecipe(recipeData);
+        alert("Tạo blog mới thành công!");
+      }
+
+      if (onSave) {
+        onSave(recipeData);
+      }
+    } catch (error) {
+      console.error("Save failed:", error);
+      alert("Lưu thất bại: " + error.message);
+    }
   };
 
   return (
@@ -122,14 +185,25 @@ const BlogForm = ({ blog, onSave, onCancel }) => {
               onChange={handleChange}
               required
             >
-              <option value="appetizers">Khai vị</option>
-              <option value="main-course">Món chính</option>
-              <option value="dessert">Tráng miệng</option>
-              <option value="breakfast">Bữa sáng</option>
-              <option value="lunch">Bữa trưa</option>
-              <option value="dinner">Bữa tối</option>
-              <option value="snacks">Ăn vặt</option>
-              <option value="drinks">Đồ uống</option>
+              <option value="">Chọn danh mục</option>
+              {categories.length > 0 ? (
+                categories.map((cat) => (
+                  <option key={cat._id || cat.id} value={cat._id || cat.id}>
+                    {cat.name}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="appetizers">Khai vị</option>
+                  <option value="main-course">Món chính</option>
+                  <option value="dessert">Tráng miệng</option>
+                  <option value="breakfast">Bữa sáng</option>
+                  <option value="lunch">Bữa trưa</option>
+                  <option value="dinner">Bữa tối</option>
+                  <option value="snacks">Ăn vặt</option>
+                  <option value="drinks">Đồ uống</option>
+                </>
+              )}
             </select>
           </div>
         </div>

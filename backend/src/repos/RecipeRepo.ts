@@ -45,6 +45,8 @@ export class RecipeRepo implements IRecipeRepo {
   ): Promise<IRecipe | null> {
     return this.model
       .findByIdAndUpdate(id, data, { new: true })
+      .populate("category", "name description image")
+      .populate("author", "username email")
       .exec() as Promise<IRecipe | null>;
   }
 
@@ -68,7 +70,11 @@ export class RecipeRepo implements IRecipeRepo {
   }
 
   public async getByAuthor(author: string): Promise<IRecipe[]> {
-    return this.model.find({ author }).exec() as Promise<IRecipe[]>;
+    return this.model
+      .find({ author })
+      .populate("category", "name description image")
+      .populate("author", "username email")
+      .exec() as Promise<IRecipe[]>;
   }
 
   public async getByCategory(category: string): Promise<IRecipe[]> {
