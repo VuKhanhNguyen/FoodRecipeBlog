@@ -29,6 +29,30 @@ const RecipeCard = ({ recipe }) => {
     // Navigate to recipe detail or filter by difficulty
   };
 
+  // --- XỬ LÝ HIỂN THỊ MÔ TẢ (NEW) ---
+  const stripHtml = (html) => {
+    if (!html) return "";
+    // Dùng DOMParser để chuyển HTML thành text
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
+  const getShortDescription = () => {
+    // Lấy nội dung gốc
+    const rawContent = recipeData.description || recipeData.summary || "";
+    // Chuyển về dạng text thuần
+    const plainText = stripHtml(rawContent);
+
+    // Kiểm tra nếu rỗng
+    if (!plainText.trim()) return "Không có mô tả";
+
+    // Cắt ngắn nếu dài quá 100 ký tự
+    const maxLength = 100;
+    return plainText.length > maxLength
+      ? plainText.substring(0, maxLength) + "..."
+      : plainText;
+  };
+
   // Render rating stars
   const renderStars = (rating = 0) => {
     const stars = [];
@@ -92,9 +116,7 @@ const RecipeCard = ({ recipe }) => {
               {recipeData.title}
             </a>
           </h5>
-          <p>
-            {recipeData.description || recipeData.summary || "Không có mô tả"}
-          </p>
+          <p>{getShortDescription()}</p>
         </div>
         <div className="metro_post-footer">
           <div className="metro_rating">{renderStars(recipeData.rating)}</div>

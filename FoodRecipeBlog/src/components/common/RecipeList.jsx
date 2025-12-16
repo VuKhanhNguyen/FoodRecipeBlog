@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
 
-const RecipeList = ({ categoryName }) => {
+const RecipeList = ({
+  categoryName,
+  page = 1,
+  pageSize = 6,
+  onTotalChange,
+}) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +39,11 @@ const RecipeList = ({ categoryName }) => {
 
         const data = await response.json();
         console.log("Recipes data:", data.recipes); // Debug
-        setRecipes(data.recipes || []);
+        const items = data.recipes || [];
+        setRecipes(items);
+        if (typeof onTotalChange === "function") {
+          onTotalChange(items.length);
+        }
       } catch (err) {
         setError(err.message);
         console.error("Error fetching recipes:", err);
@@ -44,7 +53,7 @@ const RecipeList = ({ categoryName }) => {
     };
 
     fetchRecipes();
-  }, [categoryName]);
+  }, [categoryName, onTotalChange]);
 
   if (loading) {
     return (
@@ -70,9 +79,13 @@ const RecipeList = ({ categoryName }) => {
     );
   }
 
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const visible = recipes.slice(startIndex, endIndex);
+
   return (
     <>
-      {recipes.map((recipe) => (
+      {visible.map((recipe) => (
         <div key={recipe._id} className="col-lg-4 col-md-6">
           <RecipeCard recipe={recipe} />
         </div>

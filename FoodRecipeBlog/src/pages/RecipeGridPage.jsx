@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import RecipeCategoriesBanner from "../components/otherBanner/RecipeCategoriesBanner";
@@ -10,6 +10,14 @@ import RecipeBlogBanner from "../components/otherBanner/RecipeBlogBanner";
 
 const RecipeGridPage = () => {
   const { categoryName } = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const pageSize = 6;
+
+  useEffect(() => {
+    // Reset to first page when category changes
+    setCurrentPage(1);
+  }, [categoryName]);
 
   return (
     <React.Fragment>
@@ -25,10 +33,20 @@ const RecipeGridPage = () => {
             </div>
           )}
           <div className="row">
-            <RecipeList categoryName={categoryName} />
+            <RecipeList
+              categoryName={categoryName}
+              page={currentPage}
+              pageSize={pageSize}
+              onTotalChange={setTotalItems}
+            />
           </div>
         </div>
-        <Pagination />
+        <Pagination
+          totalItems={totalItems}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       <InstagramFeed />
