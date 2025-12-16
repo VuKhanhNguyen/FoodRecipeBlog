@@ -7,7 +7,8 @@ import logger from "jet-logger";
 import { ICreateRecipeReqBody, IUpdateRecipeReqBody } from "./types";
 import { authenticateToken } from "@src/middleware/auth";
 import { IRequestWithUser } from "@src/middleware/types";
-import { Types } from "mongoose";
+import { Types, isValidObjectId } from "mongoose";
+import { CategoryModel } from "@src/models/Category";
 
 const recipeRouter = Router();
 
@@ -37,6 +38,36 @@ const validateNutritionInfo = (nutritionInfo?: any): boolean => {
   }
 
   return true;
+};
+
+// Helper: resolve category input (id string, object with _id, or name) to ObjectId
+const resolveCategoryId = async (
+  category: unknown
+): Promise<Types.ObjectId | null> => {
+  try {
+    if (category instanceof Types.ObjectId) return category;
+
+    if (
+      category &&
+      typeof category === "object" &&
+      (category as any)._id &&
+      isValidObjectId((category as any)._id)
+    ) {
+      return new Types.ObjectId((category as any)._id);
+    }
+
+    if (typeof category === "string") {
+      if (isValidObjectId(category)) {
+        return new Types.ObjectId(category);
+      }
+      const found = await CategoryModel.findOne({ name: category }).exec();
+      if (found?._id) return found._id as Types.ObjectId;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 };
 
 recipeRouter.get("/all", async (_: Request, res: Response) => {
@@ -234,10 +265,32 @@ recipeRouter.post(
 
       const userId = user.id;
 
-      const newRecipe = await RecipeService.createRecipe({
+      // Normalize category to ObjectId (accept id, object, or name)
+      const categoryId = await resolveCategoryId(recipeData.category);
+      if (!categoryId) {
+        return res.status(HTTP_STATUS_CODES.BadRequest).json({
+          error:
+            "Danh mục không hợp lệ. Vui lòng chọn danh mục hợp lệ (ID hoặc tên).",
+        });
+      }
+
+      // Sanitize numerics to satisfy schema constraints
+      const sanitizeNumber = (val: any, min: number, fallback: number) => {
+        const num = typeof val === "number" ? val : Number(val);
+        if (Number.isFinite(num) && num >= min) return num;
+        return fallback;
+      };
+
+      const payload = {
         ...recipeData,
+        category: categoryId,
         author: new Types.ObjectId(userId),
-      });
+        prepTime: sanitizeNumber((recipeData as any).prepTime, 0, 0),
+        cookTime: sanitizeNumber((recipeData as any).cookTime, 0, 0),
+        servings: sanitizeNumber((recipeData as any).servings, 1, 1),
+      } as ICreateRecipeReqBody as any;
+
+      const newRecipe = await RecipeService.createRecipe(payload as any);
 
       return res.status(HTTP_STATUS_CODES.Created).json({ recipe: newRecipe });
     } catch (error) {
@@ -297,7 +350,40 @@ recipeRouter.put(
           .json({ error: "Dữ liệu cập nhật không được để trống | 400" });
       }
 
-      const updatedRecipe = await RecipeService.updateRecipe(id, recipeData);
+      // Normalize category to ObjectId if provided
+      let normalizedData:
+        | IUpdateRecipeReqBody
+        | (IUpdateRecipeReqBody & { category: Types.ObjectId }) = recipeData;
+      if (recipeData.category !== undefined) {
+        const categoryId = await resolveCategoryId(recipeData.category as any);
+        if (!categoryId) {
+          return res.status(HTTP_STATUS_CODES.BadRequest).json({
+            error:
+              "Danh mục không hợp lệ. Vui lòng chọn danh mục hợp lệ (ID hoặc tên).",
+          });
+        }
+        normalizedData = { ...recipeData, category: categoryId } as any;
+      }
+
+      // Sanitize numeric fields if provided to satisfy schema
+      const sanitizeNumber = (val: any, min: number) => {
+        if (val === undefined) return undefined;
+        const num = typeof val === "number" ? val : Number(val);
+        if (!Number.isFinite(num)) return undefined;
+        return num < min ? min : num;
+      };
+
+      normalizedData = {
+        ...normalizedData,
+        prepTime: sanitizeNumber((normalizedData as any).prepTime, 0) as any,
+        cookTime: sanitizeNumber((normalizedData as any).cookTime, 0) as any,
+        servings: sanitizeNumber((normalizedData as any).servings, 1) as any,
+      } as any;
+
+      const updatedRecipe = await RecipeService.updateRecipe(
+        id,
+        normalizedData as any
+      );
       return res.status(HTTP_STATUS_CODES.Ok).json({
         message: "Cập nhật công thức thành công | 200",
         recipe: updatedRecipe,

@@ -11,7 +11,10 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const dropdownRef = useRef(null);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     // Kiểm tra trạng thái đăng nhập bằng authService
@@ -30,6 +33,31 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const shouldStick = window.scrollY > 10;
+      setIsSticky(shouldStick);
+      if (bottomRef.current) {
+        setHeaderHeight(bottomRef.current.offsetHeight || 0);
+      }
+    };
+
+    const handleResize = () => {
+      if (bottomRef.current) {
+        setHeaderHeight(bottomRef.current.offsetHeight || 0);
+      }
+    };
+
+    // Initialize on mount
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -104,240 +132,228 @@ const Header = () => {
   };
 
   return (
-    <header className="metro_header header-1 can-sticky">
-      {/* Middle Header */}
-      <div className="metro_header-middle">
-        <div className="container">
-          <nav className="navbar">
-            <ul className="navbar-nav">
-              <li className="menu-item">
-                {" "}
-                <a href="Đội ngũ.html">Đội ngũ</a>{" "}
-              </li>
-              <li className="menu-item">
-                {" "}
-                <a href="contact-us.html">Liên hệ</a>{" "}
-              </li>
-            </ul>
-            {/* Logo */}
-            <a className="navbar-brand" href="index.html">
-              <img src={logo} alt="logo" />
-            </a>
-            {/* Controls */}
-            <div className="metro_header-controls">
-              <div className="user-menu-wrapper" ref={dropdownRef}>
-                <a
-                  href="#"
-                  onClick={handleLoginClick}
-                  className="metro_btn-custom"
-                >
-                  <i className="fa fa-user"></i>{" "}
-                  {currentUser?.username ||
-                    currentUser?.fullName ||
-                    "Đăng nhập"}
-                  {isLoggedIn && (
-                    <i
-                      className="fa fa-chevron-down"
-                      style={{ marginLeft: "8px", fontSize: "12px" }}
-                    ></i>
+    <>
+      <header
+        className={`metro_header header-1 can-sticky ${
+          isSticky ? "sticky" : ""
+        }`}
+      >
+        {/* Middle Header */}
+        <div className="metro_header-middle">
+          <div className="container">
+            <nav className="navbar">
+              <ul className="navbar-nav">
+                <li className="menu-item">
+                  {" "}
+                  <a href="Đội ngũ.html">Đội ngũ</a>{" "}
+                </li>
+                <li className="menu-item">
+                  {" "}
+                  <a href="contact-us.html">Liên hệ</a>{" "}
+                </li>
+              </ul>
+              {/* Logo */}
+              <a className="navbar-brand" href="index.html">
+                <img src={logo} alt="logo" />
+              </a>
+              {/* Controls */}
+              <div className="metro_header-controls">
+                <div className="user-menu-wrapper" ref={dropdownRef}>
+                  <a
+                    href="#"
+                    onClick={handleLoginClick}
+                    className="metro_btn-custom"
+                  >
+                    <i className="fa fa-user"></i>{" "}
+                    {currentUser?.username ||
+                      currentUser?.fullName ||
+                      "Đăng nhập"}
+                    {isLoggedIn && (
+                      <i
+                        className="fa fa-chevron-down"
+                        style={{ marginLeft: "8px", fontSize: "12px" }}
+                      ></i>
+                    )}
+                  </a>
+                  {isLoggedIn && showDropdown && (
+                    <div className="user-dropdown-menu">
+                      <a
+                        href="#"
+                        onClick={handleRecipeManage}
+                        className="dropdown-item"
+                      >
+                        <i className="fa fa-utensils"></i> Quản lý công thức
+                      </a>
+                      <a
+                        href="#"
+                        onClick={handleBlogManage}
+                        className="dropdown-item"
+                      >
+                        <i className="fa fa-edit"></i> Quản lý blog
+                      </a>
+                      <a
+                        href="#"
+                        onClick={handleSettings}
+                        className="dropdown-item"
+                      >
+                        <i className="fa fa-cog"></i> Cài đặt
+                      </a>
+                      <a
+                        href="#"
+                        onClick={handleLogout}
+                        className="dropdown-item"
+                      >
+                        <i className="fa fa-sign-out-alt"></i> Đăng xuất
+                      </a>
+                    </div>
                   )}
-                </a>
-                {isLoggedIn && showDropdown && (
-                  <div className="user-dropdown-menu">
-                    <a
-                      href="#"
-                      onClick={handleRecipeManage}
-                      className="dropdown-item"
-                    >
-                      <i className="fa fa-utensils"></i> Quản lý công thức
-                    </a>
-                    <a
-                      href="#"
-                      onClick={handleBlogManage}
-                      className="dropdown-item"
-                    >
-                      <i className="fa fa-edit"></i> Quản lý blog
-                    </a>
-                    <a
-                      href="#"
-                      onClick={handleSettings}
-                      className="dropdown-item"
-                    >
-                      <i className="fa fa-cog"></i> Cài đặt
-                    </a>
-                    <a
-                      href="#"
-                      onClick={handleLogout}
-                      className="dropdown-item"
-                    >
-                      <i className="fa fa-sign-out-alt"></i> Đăng xuất
-                    </a>
-                  </div>
-                )}
+                </div>
+                <div className="aside-toggler aside-trigger-left">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
-              <div className="aside-toggler aside-trigger-left">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          </nav>
+            </nav>
+          </div>
         </div>
-      </div>
 
-      {/* Bottom Header (Menu chính) */}
-      <div className="metro_header-bottom">
-        <div className="container">
-          <div className="metro_header-bottom-inner">
-            {/* Side navigation toggle */}
-            <div className="aside-toggler aside-trigger-right desktop-toggler">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+        {/* Bottom Header (Menu chính) */}
+        <div className="metro_header-bottom" ref={bottomRef}>
+          <div className="container">
+            <div className="metro_header-bottom-inner">
+              {/* Side navigation toggle */}
+              <div className="aside-toggler aside-trigger-right desktop-toggler">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
 
-            {/*  Menu  */}
-            <ul className="navbar-nav">
-              <li className="menu-item menu-item-has-children">
-                <a href="#" onClick={handleHomeClick}>
-                  Trang chủ
-                </a>
-              </li>
-              {/* <li className="menu-item menu-item-has-children">
+              {/*  Menu  */}
+              <ul className="navbar-nav">
+                <li className="menu-item menu-item-has-children">
+                  <a href="#" onClick={handleHomeClick}>
+                    Trang chủ
+                  </a>
+                </li>
+                {/* <li className="menu-item menu-item-has-children">
               <a href="#">Blog</a>
               <ul className="sub-menu">
                 <li className="menu-item"> <a href="blog-grid.html">Blog Archive</a> </li>
                 <li className="menu-item"> <a href="blog-details.html">Blog Details</a> </li>
               </ul>
             </li> */}
-              <li className="menu-item menu-item-has-children">
-                <a href="#">Shop</a>
-                <ul className="sub-menu">
-                  <li className="menu-item">
-                    {" "}
-                    <a href="shop.html">Shop Catalog</a>{" "}
-                  </li>
-                  <li className="menu-item">
-                    {" "}
-                    <a href="cart.html">Giỏ hàng</a>{" "}
-                  </li>
-                  <li className="menu-item">
-                    {" "}
-                    <a href="checkout.html">Thanh toán</a>{" "}
-                  </li>
-                  <li className="menu-item">
-                    {" "}
-                    <a href="product-details.html">Chi tiết sản phẩm</a>{" "}
-                  </li>
-                </ul>
-              </li>
-              <li className="menu-item menu-item-has-children mega-menu-wrapper">
-                <a href="#">Công thức</a>
-                <ul className="sub-menu">
-                  <li>
-                    <div className="container">
-                      <div className="row">
-                        <div className="col-lg-4">
-                          <div className="mega-menu-item">
-                            <h6>Trang công thức</h6>
-                            <a href="#" onClick={handleRecipeGridClick}>
-                              Blog công thức
-                            </a>
-                            <a href="#" onClick={handleRecipeDetailClick}>
-                              Công thức chi tiết
-                            </a>
-                            <a href="#" onClick={handleCategoriesClick}>
-                              Danh mục công thức
-                            </a>
-                            <a href="#" onClick={handleAuthorsClick}>
-                              Tác giả công thức
-                            </a>
-                            <a href="#" onClick={handleBlogManage}>
-                              Quản lý công thức
-                            </a>
+
+                <li className="menu-item menu-item-has-children mega-menu-wrapper">
+                  <a href="#">Công thức</a>
+                  <ul className="sub-menu">
+                    <li>
+                      <div className="container">
+                        <div className="row">
+                          <div className="col-lg-4">
+                            <div className="mega-menu-item">
+                              <h6>Trang công thức</h6>
+                              <a href="#" onClick={handleRecipeGridClick}>
+                                Blog công thức
+                              </a>
+                              <a href="#" onClick={handleRecipeDetailClick}>
+                                Công thức chi tiết
+                              </a>
+                              <a href="#" onClick={handleCategoriesClick}>
+                                Danh mục công thức
+                              </a>
+                              <a href="#" onClick={handleAuthorsClick}>
+                                Tác giả công thức
+                              </a>
+                              <a href="#" onClick={handleBlogManage}>
+                                Quản lý blog
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-lg-4">
-                          <div className="mega-menu-item">
-                            <a
-                              href="recipe-grid.html"
-                              className="metro_recipe-category"
-                            >
-                              <div className="metro_recipe-category-thumb">
-                                <img src={category3} alt="Recipe Category" />
-                              </div>
-                            </a>
+                          <div className="col-lg-4">
+                            <div className="mega-menu-item">
+                              <a
+                                href="recipe-grid.html"
+                                className="metro_recipe-category"
+                              >
+                                <div className="metro_recipe-category-thumb">
+                                  <img src={category3} alt="Recipe Category" />
+                                </div>
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-lg-4">
-                          <div className="mega-menu-item">
-                            <a
-                              href="recipe-grid.html"
-                              className="metro_recipe-category"
-                            >
-                              <div className="metro_recipe-category-thumb">
-                                <img src={category2} alt="Recipe Category" />
-                              </div>
-                            </a>
+                          <div className="col-lg-4">
+                            <div className="mega-menu-item">
+                              <a
+                                href="recipe-grid.html"
+                                className="metro_recipe-category"
+                              >
+                                <div className="metro_recipe-category-thumb">
+                                  <img src={category2} alt="Recipe Category" />
+                                </div>
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li className="menu-item menu-item-has-children">
-                <a href="#">Khác</a>
-                <ul className="sub-menu">
-                  <li className="menu-item">
-                    {" "}
-                    <a href="contact-us.html">Liên hệ</a>{" "}
-                  </li>
+                    </li>
+                  </ul>
+                </li>
+                <li className="menu-item menu-item-has-children">
+                  <a href="#">Khác</a>
+                  <ul className="sub-menu">
+                    <li className="menu-item">
+                      {" "}
+                      <a href="contact-us.html">Liên hệ</a>{" "}
+                    </li>
 
-                  <li className="menu-item">
-                    {" "}
-                    <a href="#" onClick={handleTeamClick}>
-                      Đội ngũ
-                    </a>{" "}
-                  </li>
-                </ul>
-              </li>
-            </ul>
+                    <li className="menu-item">
+                      {" "}
+                      <a href="#" onClick={handleTeamClick}>
+                        Đội ngũ
+                      </a>{" "}
+                    </li>
+                  </ul>
+                </li>
+              </ul>
 
-            <ul className="metro_header-bottom-sm metro_sm">
-              <li>
-                {" "}
-                <a href="#">
+              <ul className="metro_header-bottom-sm metro_sm">
+                <li>
                   {" "}
-                  <i className="fab fa-facebook-f"></i>{" "}
-                </a>{" "}
-              </li>
-              <li>
-                {" "}
-                <a href="#">
+                  <a href="#">
+                    {" "}
+                    <i className="fab fa-facebook-f"></i>{" "}
+                  </a>{" "}
+                </li>
+                <li>
                   {" "}
-                  <i className="fab fa-twitter"></i>{" "}
-                </a>{" "}
-              </li>
-              <li>
-                {" "}
-                <a href="#">
+                  <a href="#">
+                    {" "}
+                    <i className="fab fa-twitter"></i>{" "}
+                  </a>{" "}
+                </li>
+                <li>
                   {" "}
-                  <i className="fab fa-linkedin-in"></i>{" "}
-                </a>{" "}
-              </li>
-              <li>
-                {" "}
-                <a href="#">
+                  <a href="#">
+                    {" "}
+                    <i className="fab fa-linkedin-in"></i>{" "}
+                  </a>{" "}
+                </li>
+                <li>
                   {" "}
-                  <i className="fab fa-youtube"></i>{" "}
-                </a>{" "}
-              </li>
-            </ul>
+                  <a href="#">
+                    {" "}
+                    <i className="fab fa-youtube"></i>{" "}
+                  </a>{" "}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+      {/* Spacer to avoid layout shift when header becomes fixed */}
+      <div aria-hidden="true" style={{ height: isSticky ? headerHeight : 0 }} />
+    </>
   );
 };
 

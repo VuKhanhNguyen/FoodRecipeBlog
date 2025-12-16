@@ -1,19 +1,18 @@
-import morgan from 'morgan';
-import helmet from 'helmet';
-import cors from 'cors';
-import express, { Request, Response, NextFunction } from 'express';
-import logger from 'jet-logger';
+import morgan from "morgan";
+import helmet from "helmet";
+import cors from "cors";
+import express, { Request, Response, NextFunction } from "express";
+import logger from "jet-logger";
 
-import BaseRouter from '@src/routes';
+import BaseRouter from "@src/routes";
 
-import Paths from '@src/common/constants/PATHS';
-import ENV from '@src/common/constants/ENV';
+import Paths from "@src/common/constants/PATHS";
+import ENV from "@src/common/constants/ENV";
 import HTTP_STATUS_CODES, {
   HttpStatusCodes,
-} from '@src/common/constants/HTTP_STATUS_CODES';
-import { RouteError } from '@src/common/util/route-errors';
-import { NODE_ENVS } from '@src/common/constants';
-
+} from "@src/common/constants/HTTP_STATUS_CODES";
+import { RouteError } from "@src/common/util/route-errors";
+import { NODE_ENVS } from "@src/common/constants";
 
 /******************************************************************************
                                 Setup
@@ -21,19 +20,27 @@ import { NODE_ENVS } from '@src/common/constants';
 
 const app = express();
 
-
 // **** Middleware **** //
 
-// Basic middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// CORS first so even errors include CORS headers
+const allowedOrigin = "http://localhost:5173";
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Content-Length"],
+  })
+);
 
-
-app.use(cors());
+// Basic middleware with higher payload limits for base64 images
+app.use(express.json({ limit: "15mb" }));
+app.use(express.urlencoded({ extended: true, limit: "15mb" }));
 
 // Show routes called in console during development
 if (ENV.NodeEnv === NODE_ENVS.Dev) {
-  app.use(morgan('dev'));
+  app.use(morgan("dev"));
 }
 
 // Security

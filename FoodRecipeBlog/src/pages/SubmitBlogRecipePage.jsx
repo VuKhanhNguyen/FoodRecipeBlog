@@ -198,7 +198,7 @@ const SubmitBlogRecipe = () => {
                 </button>
               </div>
             </div>
-            <SidebarCTA3 formData={formData} />
+            <SidebarCTA3 formData={formData} categories={categories} />
           </div>
         </div>
       </div>

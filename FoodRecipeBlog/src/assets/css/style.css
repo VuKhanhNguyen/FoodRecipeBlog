@@ -5557,3 +5557,10 @@ td.remove {
   font-size: 120px;
   max-width: 100%;
 }
+
+/* --- Sticky Header Behavior (app override) --- */
+/* Keep theme behavior: only bottom bar sticks. Add separation shadow. */
+.metro_header.sticky.header-1 .metro_header-bottom {
+  z-index: 1040; /* above content */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}

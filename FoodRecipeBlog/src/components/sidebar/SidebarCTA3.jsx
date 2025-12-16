@@ -1,25 +1,24 @@
-import React from 'react';
-import WidgetCTA from './WidgetCTA';
-import WidgetAuthor from './WidgetAuthor';
-import WidgetRecentPost from './WidgetRecentPost';
-import WidgetCategories from './WidgetCategories';
-import WidgetTestimonials from './WidgetTestimonials';
-import WidgetNewsletter from './WidgetNewsletter';
-import WidgetSocialLinks from './WidgetSocialLinks';
-import WidgetTags from './WidgetTags';
-import WidgetSearch from './WidgetSearch';
-import RecipePreview from '../recipeManage/RecipePreview';
+import React from "react";
+import WidgetCTA from "./WidgetCTA";
+import WidgetAuthor from "./WidgetAuthor";
+import WidgetRecentPost from "./WidgetRecentPost";
+import WidgetCategories from "./WidgetCategories";
+import WidgetTestimonials from "./WidgetTestimonials";
+import WidgetNewsletter from "./WidgetNewsletter";
+import WidgetSocialLinks from "./WidgetSocialLinks";
+import WidgetTags from "./WidgetTags";
+import WidgetSearch from "./WidgetSearch";
+import RecipePreview from "../recipeManage/RecipePreview";
 
-const SidebarCTA3 = ({ formData }) => {
+const SidebarCTA3 = ({ formData, categories = [] }) => {
   return (
     <div className="col-lg-4">
       <div className="sidebar">
-        
         {/* gọi các widget vào đây */}
-        <RecipePreview formData={formData} />
+        <RecipePreview formData={formData} categories={categories} />
         <WidgetSearch />
         <WidgetCTA />
-       
+
         <WidgetRecentPost />
         <WidgetCategories />
         <WidgetTestimonials />

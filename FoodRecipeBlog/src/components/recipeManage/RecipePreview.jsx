@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-const RecipePreview = ({ formData }) => {
+const RecipePreview = ({ formData, categories = [] }) => {
   const getTotalTime = () => {
     const prep = parseInt(formData.prepTime) || 0;
     const cook = parseInt(formData.cookTime) || 0;
@@ -19,6 +19,23 @@ const RecipePreview = ({ formData }) => {
         return "";
     }
   };
+
+  const displayCategory = useMemo(() => {
+    const cat = formData.category;
+    if (!cat) return "";
+
+    const idOrName = typeof cat === "object" ? cat._id || cat.id || "" : cat;
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      const foundById = categories.find((c) => (c?._id || c?.id) === idOrName);
+      if (foundById?.name) return foundById.name;
+
+      const foundByName = categories.find((c) => c?.name === idOrName);
+      if (foundByName?.name) return foundByName.name;
+    }
+
+    return idOrName || "";
+  }, [formData.category, categories]);
 
   return (
     <div className="recipe-preview-card">
@@ -51,7 +68,7 @@ const RecipePreview = ({ formData }) => {
         {formData.category && (
           <div className="preview-section">
             <span className="preview-badge">
-              <i className="fa fa-tag"></i> {formData.category}
+              <i className="fa fa-tag"></i> {displayCategory}
             </span>
           </div>
         )}

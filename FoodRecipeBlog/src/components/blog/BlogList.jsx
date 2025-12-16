@@ -1,16 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BlogCard from "./BlogCard";
+import recipeService from "../../services/recipeService";
 
 const BlogList = ({ blogs, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [categories, setCategories] = useState([]);
+  const [loadingCats, setLoadingCats] = useState(false);
+  const [catsError, setCatsError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCategories = async () => {
+      try {
+        setLoadingCats(true);
+        const data = await recipeService.getAllCategories();
+        if (!mounted) return;
+        setCategories(Array.isArray(data?.categories) ? data.categories : []);
+      } catch (e) {
+        if (!mounted) return;
+        setCatsError(e?.message || "Không thể tải danh mục");
+      } finally {
+        if (mounted) setLoadingCats(false);
+      }
+    };
+    loadCategories();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesSearch =
       blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       blog.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const blogCategoryName =
+      typeof blog.category === "object"
+        ? blog.category?.name ||
+          blog.category?.label ||
+          blog.category?._id ||
+          blog.category?.id ||
+          ""
+        : blog.category || "";
     const matchesCategory =
-      filterCategory === "all" || blog.category === filterCategory;
+      filterCategory === "all" || blogCategoryName === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -36,14 +69,11 @@ const BlogList = ({ blogs, onEdit, onDelete }) => {
               onChange={(e) => setFilterCategory(e.target.value)}
             >
               <option value="all">Tất cả danh mục</option>
-              <option value="appetizers">Khai vị</option>
-              <option value="main-course">Món chính</option>
-              <option value="dessert">Tráng miệng</option>
-              <option value="breakfast">Bữa sáng</option>
-              <option value="lunch">Bữa trưa</option>
-              <option value="dinner">Bữa tối</option>
-              <option value="snacks">Ăn vặt</option>
-              <option value="drinks">Đồ uống</option>
+              {categories.map((c) => (
+                <option key={c._id || c.id} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
