@@ -1,0 +1,62 @@
+1. Users (Người dùng)
+{
+  _id: ObjectId,
+  username: String,
+  email: String,
+  password: String (hashed),
+  fullName: String,
+  avatar: String (URL),
+  role: String, // 'admin' hoặc 'user'
+  createdAt: Date,
+  updatedAt: Date
+}
+
+2. Recipes (Công thức nấu ăn)
+{
+  _id: ObjectId,
+  title: String,
+  description: String,
+  ingredients: Array[String],
+  instructions: Array[String],
+  prepTime: Number, // phút
+  cookTime: Number, // phút
+  servings: Number,
+  difficulty: String, // 'easy', 'medium', 'hard'
+  category: ObjectId, // reference to Categories
+  author: ObjectId, // reference to Users
+  images: Array[String], // URLs
+  tags: Array[String],
+  views: Number,
+  likes: Number,
+  createdAt: Date,
+  updatedAt: Date
+}
+
+3. Categories (Danh mục)
+{
+  _id: ObjectId,
+  name: String,
+  slug: String,
+  description: String,
+  image: String (URL),
+  createdAt: Date
+}
+
+4. Comments (Bình luận)
+{
+  _id: ObjectId,
+  recipeId: ObjectId, // reference to Recipes
+  userId: ObjectId, // reference to Users
+  content: String,
+  rating: Number, // 1-5
+  createdAt: Date,
+  updatedAt: Date
+}
+
+5. Favorites (Yêu thích)
+{
+  _id: ObjectId,
+  userId: ObjectId, // reference to Users
+  recipeId: ObjectId, // reference to Recipes
+  createdAt: Date
+}

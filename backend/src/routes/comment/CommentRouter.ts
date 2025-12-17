@@ -1,0 +1,229 @@
+/* eslint-disable max-len */
+import HTTP_STATUS_CODES from "@src/common/constants/HTTP_STATUS_CODES";
+import { RouteError } from "@src/common/util/route-errors";
+import CommentService from "@src/services/CommentService";
+import { Router, Request, Response } from "express";
+import logger from "jet-logger";
+import { ICreateCommentReqBody, IUpdateCommentReqBody } from "./types";
+import { authenticateToken } from "@src/middleware/auth";
+import { IRequestWithUser } from "@src/middleware/types";
+import { Types } from "mongoose";
+import RecipeService from "@src/services/RecipeService";
+
+const commentRouter = Router();
+
+commentRouter.get("/all", async (_: Request, res: Response) => {
+  try {
+    const comments = await CommentService.getAll();
+    return res.status(HTTP_STATUS_CODES.Ok).json({ comments });
+  } catch (error) {
+    logger.err(error, true);
+    return res
+      .status(HTTP_STATUS_CODES.InternalServerError)
+      .json({ error: "Lỗi server khi lấy danh sách bình luận | 500" });
+  }
+});
+
+commentRouter.get("/recipe/:recipeId", async (req: Request, res: Response) => {
+  try {
+    const { recipeId } = req.params;
+    const comments = await CommentService.getByRecipeId(recipeId);
+    return res.status(HTTP_STATUS_CODES.Ok).json({ comments });
+  } catch (error) {
+    logger.err(error, true);
+    if (error instanceof RouteError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    return res.status(HTTP_STATUS_CODES.InternalServerError).json({
+      error: "Lỗi server khi lấy bình luận. | 500",
+    });
+  }
+});
+
+commentRouter.get("/author/:author", async (req: Request, res: Response) => {
+  try {
+    const { author } = req.params;
+    const comments = await CommentService.getByAuthor(author);
+    return res.status(HTTP_STATUS_CODES.Ok).json({ comments });
+  } catch (error) {
+    logger.err(error, true);
+    if (error instanceof RouteError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    return res.status(HTTP_STATUS_CODES.InternalServerError).json({
+      error: "Lỗi server khi lấy bình luận. | 500",
+    });
+  }
+});
+
+commentRouter.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const comment = await CommentService.getOne(id);
+    return res.status(HTTP_STATUS_CODES.Ok).json({ comment });
+  } catch (error) {
+    logger.err(error, true);
+    if (error instanceof RouteError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    return res.status(HTTP_STATUS_CODES.InternalServerError).json({
+      error: "Lỗi server khi lấy thông tin bình luận. | 500",
+    });
+  }
+});
+
+commentRouter.post(
+  "/",
+  authenticateToken,
+  async (
+    req: Request<object, object, ICreateCommentReqBody>,
+    res: Response
+  ) => {
+    try {
+      const commentData = req.body;
+
+      const user = (req as Request & IRequestWithUser).user;
+      if (!user) {
+        return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+          error: "Bạn cần đăng nhập để thực hiện hành động này.",
+        });
+      }
+      const userId: string = user.id;
+
+      const newComment = await CommentService.createComment({
+        ...commentData,
+        userId: new Types.ObjectId(userId),
+      });
+      // Cập nhật rating cho recipe nếu comment có rating
+      if (commentData.rating && commentData.recipeId) {
+        const averageRating = await RecipeService.calculateAverageRating(
+          commentData.recipeId.toString()
+        );
+        await RecipeService.updateRecipe(commentData.recipeId.toString(), {
+          rating: averageRating,
+        });
+      }
+      return res
+        .status(HTTP_STATUS_CODES.Created)
+        .json({ comment: newComment });
+    } catch (error) {
+      logger.err(error, true);
+      return res
+        .status(HTTP_STATUS_CODES.InternalServerError)
+        .json({ error: "Lỗi server khi tạo bình luận. | 500" });
+    }
+  }
+);
+
+commentRouter.put(
+  "/:id",
+  authenticateToken,
+  async (
+    req: Request<{ id: string }, object, IUpdateCommentReqBody>,
+    res: Response
+  ) => {
+    try {
+      const { id } = req.params;
+      const commentData = req.body;
+
+      const user = (req as Request & IRequestWithUser).user;
+      if (!user) {
+        return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+          error: "Bạn cần đăng nhập để thực hiện hành động này.",
+        });
+      }
+      const userId: string = user.id;
+
+      const comment = await CommentService.getOne(id);
+
+      if (!comment) {
+        throw new RouteError(
+          HTTP_STATUS_CODES.NotFound,
+          "Bình luận không tồn tại"
+        );
+      }
+
+      if (comment.userId.toString() !== userId) {
+        return res
+          .status(HTTP_STATUS_CODES.Forbidden)
+          .json({ error: "Bạn không có quyền cập nhật bình luận này. | 403" });
+      }
+
+      const updatedComment = await CommentService.updateComment(
+        id,
+        commentData
+      );
+
+      // Cập nhật rating cho recipe
+      if (comment.recipeId) {
+        const averageRating = await RecipeService.calculateAverageRating(
+          comment.recipeId.toString()
+        );
+        await RecipeService.updateRecipe(comment.recipeId.toString(), {
+          rating: averageRating,
+        });
+      }
+
+      return res.status(HTTP_STATUS_CODES.Ok).json({ comment: updatedComment });
+    } catch (error) {
+      logger.err(error, true);
+      return res
+        .status(HTTP_STATUS_CODES.InternalServerError)
+        .json({ error: "Lỗi server khi cập nhật bình luận. | 500" });
+    }
+  }
+);
+
+commentRouter.delete(
+  "/:id",
+  authenticateToken,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const user = (req as Request & IRequestWithUser).user;
+      if (!user) {
+        return res.status(HTTP_STATUS_CODES.Unauthorized).json({
+          error: "Bạn cần đăng nhập để thực hiện hành động này.",
+        });
+      }
+      const userId: string = user.id;
+
+      const comment = await CommentService.getOne(id);
+      if (!comment) {
+        throw new RouteError(
+          HTTP_STATUS_CODES.NotFound,
+          "Bình luận không tồn tại"
+        );
+      }
+
+      if (comment.userId.toString() !== userId) {
+        return res
+          .status(HTTP_STATUS_CODES.Forbidden)
+          .json({ error: "Bạn không có quyền xóa bình luận này. | 403" });
+      }
+
+      const recipeId = comment.recipeId;
+      await CommentService.deleteComment(id);
+
+      // Cập nhật rating cho recipe sau khi xóa comment
+      if (recipeId) {
+        const averageRating = await RecipeService.calculateAverageRating(
+          recipeId.toString()
+        );
+        await RecipeService.updateRecipe(recipeId.toString(), {
+          rating: averageRating,
+        });
+      }
+
+      return res.status(HTTP_STATUS_CODES.NoContent).send();
+    } catch (error) {
+      logger.err(error, true);
+      return res
+        .status(HTTP_STATUS_CODES.InternalServerError)
+        .json({ error: "Lỗi server khi xóa bình luận. | 500" });
+    }
+  }
+);
+
+export default commentRouter;

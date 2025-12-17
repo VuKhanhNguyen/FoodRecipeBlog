@@ -1,0 +1,21 @@
+.category-thumb-fixed {
+  height: 250px;
+  overflow: hidden;
+}
+
+.category-thumb-fixed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.metro_recipe-category {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.metro_recipe-category-content {
+  flex-grow: 1;
+}
