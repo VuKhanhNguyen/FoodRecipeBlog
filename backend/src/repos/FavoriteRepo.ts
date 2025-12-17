@@ -1,10 +1,15 @@
 /* eslint-disable max-len */
-import { IBaseRepo } from './BaseRepo';
-import { IFavorite, FavoriteModel } from '@src/models/Favorite';
+import { IBaseRepo } from "./BaseRepo";
+import { IFavorite, FavoriteModel } from "@src/models/Favorite";
 
 export interface IFavoriteRepo extends IBaseRepo<IFavorite> {
   getByUserId: (userId: string) => Promise<IFavorite[]>;
   getByRecipeId: (recipeId: string) => Promise<IFavorite[]>;
+  getByUserAndRecipe: (
+    userId: string,
+    recipeId: string
+  ) => Promise<IFavorite | null>;
+  countByRecipeId: (recipeId: string) => Promise<number>;
 }
 
 export class FavoriteRepo implements IFavoriteRepo {
@@ -18,13 +23,20 @@ export class FavoriteRepo implements IFavoriteRepo {
     return this.model.findById(id).exec() as Promise<IFavorite | null>;
   }
 
-  public async add(data: Omit<IFavorite, '_id' | 'createdAt'>): Promise<IFavorite> {
+  public async add(
+    data: Omit<IFavorite, "_id" | "createdAt">
+  ): Promise<IFavorite> {
     const newFavorite = new this.model(data);
     return newFavorite.save() as Promise<IFavorite>;
   }
 
-  public async update(id: string, data: Partial<IFavorite>): Promise<IFavorite | null> {
-    return this.model.findByIdAndUpdate(id, data, { new: true }).exec() as Promise<IFavorite | null>;
+  public async update(
+    id: string,
+    data: Partial<IFavorite>
+  ): Promise<IFavorite | null> {
+    return this.model
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec() as Promise<IFavorite | null>;
   }
 
   public async delete(id: string): Promise<boolean> {
@@ -39,5 +51,17 @@ export class FavoriteRepo implements IFavoriteRepo {
   public async getByRecipeId(recipeId: string): Promise<IFavorite[]> {
     return this.model.find({ recipeId }).exec() as Promise<IFavorite[]>;
   }
-}
 
+  public async getByUserAndRecipe(
+    userId: string,
+    recipeId: string
+  ): Promise<IFavorite | null> {
+    return this.model
+      .findOne({ userId, recipeId })
+      .exec() as Promise<IFavorite | null>;
+  }
+
+  public async countByRecipeId(recipeId: string): Promise<number> {
+    return this.model.countDocuments({ recipeId }).exec() as unknown as number;
+  }
+}

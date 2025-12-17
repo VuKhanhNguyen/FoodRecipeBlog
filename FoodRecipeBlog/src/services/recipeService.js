@@ -1,4 +1,8 @@
 import authService from "./authService";
+import {
+  increment as startLoading,
+  decrement as stopLoading,
+} from "../utils/loadingManager";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -16,8 +20,15 @@ class RecipeService {
       },
     };
 
-    const response = await fetch(url, config);
-    const data = await response.json();
+    startLoading();
+    let response;
+    let data;
+    try {
+      response = await fetch(url, config);
+      data = await response.json();
+    } finally {
+      stopLoading();
+    }
 
     if (!response.ok) {
       // Nếu token hết hạn hoặc không hợp lệ
@@ -124,6 +135,17 @@ class RecipeService {
   async getUserFavorites() {
     // Matches backend route GET /favorites/my-favorites
     return this.fetchWithAuth(`${API_URL}/favorites/my-favorites`);
+  }
+
+  // Lấy số lượng favorites của 1 recipe (public)
+  async getFavoritesCount(recipeId) {
+    // This endpoint is public; do not require auth
+    const res = await fetch(`${API_URL}/favorites/count/${recipeId}`);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Không thể lấy số yêu thích");
+    }
+    return data;
   }
 }
 

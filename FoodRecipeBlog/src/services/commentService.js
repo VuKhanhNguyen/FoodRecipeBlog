@@ -1,4 +1,8 @@
 import authService from "./authService";
+import {
+  increment as startLoading,
+  decrement as stopLoading,
+} from "../utils/loadingManager";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -16,8 +20,15 @@ class CommentService {
       },
     };
 
-    const response = await fetch(url, config);
-    const data = await response.json();
+    startLoading();
+    let response;
+    let data;
+    try {
+      response = await fetch(url, config);
+      data = await response.json();
+    } finally {
+      stopLoading();
+    }
 
     if (!response.ok) {
       if (response.status === 401 || response.status === 403) {

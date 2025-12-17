@@ -4,6 +4,8 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import HomePage from "./pages/HomePage.jsx";
+import GlobalLoadingOverlay from "./components/common/GlobalLoadingOverlay.jsx";
+import RouteChangeLoader from "./components/common/RouteChangeLoader.jsx";
 import RecipeDetailPage from "./pages/RecipeDetailPage.jsx";
 import RecipeCategoriesPage from "./pages/RecipeCategoriesPage.jsx";
 import RecipeGridPage from "./pages/RecipeGridPage.jsx";
@@ -17,6 +19,8 @@ import RegisterPage from "./pages/RegisterPage";
 function App() {
   return (
     <Router>
+      <RouteChangeLoader />
+      <GlobalLoadingOverlay />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/recipe-detail" element={<RecipeDetailPage />} />

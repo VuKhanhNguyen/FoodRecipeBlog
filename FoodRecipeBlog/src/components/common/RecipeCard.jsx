@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import recipe1 from "../../assets/img/recipes/1.jpg";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/recipeCard.css";
@@ -88,7 +88,13 @@ const RecipeCard = ({ recipe }) => {
 
   // Like/Favorite state
   const [isFavorite, setIsFavorite] = useState(!!recipe?.isFavorite);
+  useEffect(() => {
+    setIsFavorite(!!recipe?.isFavorite);
+  }, [recipe?.isFavorite]);
   const [likeCount, setLikeCount] = useState(Number(recipe?.likes || 0));
+  useEffect(() => {
+    setLikeCount(Number(recipe?.likes || 0));
+  }, [recipe?.likes]);
   const [liking, setLiking] = useState(false);
 
   const handleFavoriteClick = async (e) => {

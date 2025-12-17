@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
-import HTTP_STATUS_CODES from '@src/common/constants/HTTP_STATUS_CODES';
-import { RouteError } from '@src/common/util/route-errors';
-import { IFavoriteRepo, FavoriteRepo } from '@src/repos/FavoriteRepo';
-import { IFavorite } from '@src/models/Favorite';
+import HTTP_STATUS_CODES from "@src/common/constants/HTTP_STATUS_CODES";
+import { RouteError } from "@src/common/util/route-errors";
+import { IFavoriteRepo, FavoriteRepo } from "@src/repos/FavoriteRepo";
+import { IFavorite } from "@src/models/Favorite";
 
-export const FAVORITE_NOT_FOUND_ERR = 'Favorite not found';
+export const FAVORITE_NOT_FOUND_ERR = "Favorite not found";
 
 export class FavoriteService {
   private favoriteRepo: IFavoriteRepo = new FavoriteRepo();
@@ -16,10 +16,7 @@ export class FavoriteService {
   public async getOne(id: string): Promise<IFavorite | null> {
     const favorite = await this.favoriteRepo.getById(id);
     if (!favorite) {
-      throw new RouteError(
-        HTTP_STATUS_CODES.NotFound,
-        FAVORITE_NOT_FOUND_ERR,
-      );
+      throw new RouteError(HTTP_STATUS_CODES.NotFound, FAVORITE_NOT_FOUND_ERR);
     }
     return favorite;
   }
@@ -32,7 +29,19 @@ export class FavoriteService {
     return this.favoriteRepo.getByRecipeId(recipeId);
   }
 
-  public async createFavorite(favoriteData: Omit<IFavorite, '_id' | 'createdAt'>): Promise<IFavorite> {
+  public async countByRecipeId(recipeId: string): Promise<number> {
+    return this.favoriteRepo.countByRecipeId(recipeId);
+  }
+
+  public async createFavorite(
+    favoriteData: Omit<IFavorite, "_id" | "createdAt">
+  ): Promise<IFavorite> {
+    // Ensure idempotency: if exists, return existing instead of throwing duplicate error
+    const existing = await this.favoriteRepo.getByUserAndRecipe(
+      favoriteData.userId.toString(),
+      favoriteData.recipeId.toString()
+    );
+    if (existing) return existing;
     return this.favoriteRepo.add(favoriteData);
   }
 
@@ -50,10 +59,7 @@ export class FavoriteService {
   public async deleteFavorite(id: string): Promise<void> {
     const favorite = await this.favoriteRepo.getById(id);
     if (!favorite) {
-      throw new RouteError(
-        HTTP_STATUS_CODES.NotFound,
-        FAVORITE_NOT_FOUND_ERR,
-      );
+      throw new RouteError(HTTP_STATUS_CODES.NotFound, FAVORITE_NOT_FOUND_ERR);
     }
     await this.favoriteRepo.delete(id);
   }

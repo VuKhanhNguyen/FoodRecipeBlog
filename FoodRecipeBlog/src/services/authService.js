@@ -1,16 +1,27 @@
+import {
+  increment as startLoading,
+  decrement as stopLoading,
+} from "../utils/loadingManager";
 const API_URL = "http://localhost:5000/api";
 
 class AuthService {
   async register(userData) {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    startLoading();
+    let response;
+    let data;
+    try {
+      response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
-    const data = await response.json();
+      data = await response.json();
+    } finally {
+      stopLoading();
+    }
 
     if (!response.ok) {
       throw new Error(data.error || "Đăng ký thất bại");
@@ -24,15 +35,22 @@ class AuthService {
   }
 
   async login(username, password) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    startLoading();
+    let response;
+    let data;
+    try {
+      response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const data = await response.json();
+      data = await response.json();
+    } finally {
+      stopLoading();
+    }
 
     if (!response.ok) {
       throw new Error(data.error || "Đăng nhập thất bại");
