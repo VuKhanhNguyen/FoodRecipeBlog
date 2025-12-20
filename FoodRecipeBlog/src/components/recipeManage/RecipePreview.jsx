@@ -134,6 +134,43 @@ const RecipePreview = ({ formData, categories = [] }) => {
                   </div>
                 </div>
               )}
+              {formData.protein && (
+                <div className="meta-item">
+                  <i className="fa fa-drumstick-bite"></i>
+                  <div>
+                    <small>Protein</small>
+                    <strong>{formData.protein} g</strong>
+                  </div>
+                </div>
+              )}
+              {formData.carbs && (
+                <div className="meta-item">
+                  <i className="fa fa-bread-slice"></i>
+                  <div>
+                    <small>Carbs</small>
+                    <strong>{formData.carbs} g</strong>
+                  </div>
+                </div>
+              )}
+              {formData.fat && (
+                <div className="meta-item">
+                  <i className="fa fa-apple-alt"></i>
+                  <div>
+                    <small>Chất béo</small>
+                    <strong>{formData.fat} g</strong>
+                  </div>
+                </div>
+              )}
+              {formData.fiber && (
+                <div className="meta-item">
+                  <i className="fa fa-seedling"></i>
+                  <div>
+                    <small>Chất xơ</small>
+                    <strong>{formData.fiber} g</strong>
+                  </div>
+                </div>
+              )}
+
               {formData.difficulty && (
                 <div className="meta-item">
                   <i className="fa fa-signal"></i>

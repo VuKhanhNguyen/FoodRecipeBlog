@@ -421,7 +421,8 @@ recipeRouter.delete(
       const author = currentRecipe?.author as any;
       const authorId = author?._id ? author._id.toString() : author?.toString();
 
-      if (authorId !== userId) {
+      // Cho phép admin xóa bất kỳ recipe, hoặc author xóa recipe của mình
+      if (user.username !== "admin" && authorId !== userId) {
         return res.status(HTTP_STATUS_CODES.Forbidden).json({
           error: "Bạn không có quyền xóa công thức này | 403",
         });

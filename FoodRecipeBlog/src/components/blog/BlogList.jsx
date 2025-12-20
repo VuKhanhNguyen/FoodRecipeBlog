@@ -2,7 +2,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import BlogCard from "./BlogCard";
 import recipeService from "../../services/recipeService";
 
-const BlogList = ({ blogs, onEdit, onDelete }) => {
+const BlogList = ({
+  blogs,
+  onEdit,
+  onDelete,
+  onCardClick,
+  isAdmin,
+  isDetailOpen,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [categories, setCategories] = useState([]);
@@ -30,10 +37,22 @@ const BlogList = ({ blogs, onEdit, onDelete }) => {
     };
   }, []);
 
+  const removeVietnameseTones = (str = "") =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
   const filteredBlogs = blogs.filter((blog) => {
+    const normalizedSearch = removeVietnameseTones(searchTerm);
+
+    const normalizedTitle = removeVietnameseTones(blog.title);
+    const normalizedDescription = removeVietnameseTones(blog.description);
+
     const matchesSearch =
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.description.toLowerCase().includes(searchTerm.toLowerCase());
+      normalizedTitle.includes(normalizedSearch) ||
+      normalizedDescription.includes(normalizedSearch);
+
     const blogCategoryName =
       typeof blog.category === "object"
         ? blog.category?.name ||
@@ -42,8 +61,10 @@ const BlogList = ({ blogs, onEdit, onDelete }) => {
           blog.category?.id ||
           ""
         : blog.category || "";
+
     const matchesCategory =
       filterCategory === "all" || blogCategoryName === filterCategory;
+
     return matchesSearch && matchesCategory;
   });
 
@@ -94,6 +115,9 @@ const BlogList = ({ blogs, onEdit, onDelete }) => {
               blog={blog}
               onEdit={onEdit}
               onDelete={onDelete}
+              onCardClick={onCardClick}
+              isAdmin={!!isAdmin}
+              isDetailOpen={!!isDetailOpen}
             />
           ))
         ) : (

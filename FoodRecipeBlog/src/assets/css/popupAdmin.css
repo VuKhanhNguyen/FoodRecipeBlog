@@ -1,0 +1,148 @@
+/* --- Admin Blog Detail Modal Styles --- */
+.admin-modal .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.admin-modal .modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 12px 12px 0 0;
+  padding: 1.5rem;
+}
+
+.admin-modal .modal-title {
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+/* Layout 2 cột */
+.blog-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.detail-sidebar {
+  flex: 1 1 300px; /* Cột trái: Ảnh và thông tin tóm tắt */
+  background: #fff;
+}
+
+.detail-content {
+  flex: 2 1 400px; /* Cột phải: Nội dung chính */
+}
+
+/* Ảnh */
+.detail-image-wrapper img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+/* Các box thông tin nhỏ (Stats) */
+.recipe-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* Tags & Info */
+.info-group {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.blog-tag {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #0d47a1;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+/* Phần nội dung chính */
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #d35400; /* Màu cam nổi bật cho tiêu đề mục */
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredients-list {
+  background: #fff8e1; /* Nền vàng nhạt giống giấy note */
+  padding: 20px;
+  border-radius: 8px;
+  list-style: none;
+  margin-bottom: 24px;
+}
+
+.ingredients-list li {
+  padding: 6px 0;
+  border-bottom: 1px dashed #eecda3;
+}
+.ingredients-list li:last-child {
+  border-bottom: none;
+}
+
+.instructions-list {
+  padding-left: 20px;
+}
+
+.instructions-list li {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+/* Nutrition Box */
+.nutrition-box {
+  background: #e8f5e9;
+  border-radius: 8px;
+  padding: 16px;
+}
+.nutrition-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}

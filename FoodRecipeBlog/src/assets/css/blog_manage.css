@@ -693,3 +693,15 @@
     padding: 20px;
   }
 }
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050; /* modal cao hơn */
+}
+
+.admin-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040; /* backdrop thấp hơn modal */
+}

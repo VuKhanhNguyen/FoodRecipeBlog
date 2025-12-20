@@ -25,11 +25,16 @@ const LoginForm = () => {
     setError("");
 
     try {
-      await authService.login(formData.username, formData.password);
-      // Chuyển về trang chủ
-      navigate("/");
-      // Reload để cập nhật header
-      window.location.reload();
+      const result = await authService.login(formData.username, formData.password);
+      // Nếu là admin, chuyển sang trang quản lý admin
+      if (formData.username === "admin" && formData.password === "123456") {
+        navigate("/admin/blogs");
+        window.location.reload();
+      } else {
+        // Chuyển về trang chủ
+        navigate("/");
+        window.location.reload();
+      }
     } catch (err) {
       setError(err.message || "Tên đăng nhập hoặc mật khẩu không đúng!");
     }

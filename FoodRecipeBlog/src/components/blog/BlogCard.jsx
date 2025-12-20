@@ -1,6 +1,13 @@
 import React from "react";
 
-const BlogCard = ({ blog, onEdit, onDelete }) => {
+const BlogCard = ({
+  blog,
+  onEdit,
+  onDelete,
+  onCardClick,
+  isAdmin,
+  isDetailOpen,
+}) => {
   const handleDelete = () => {
     if (
       window.confirm(`Bạn có chắc chắn muốn xóa blog "${blog.title}" không?`)
@@ -24,19 +31,38 @@ const BlogCard = ({ blog, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="blog-card">
+    <div
+      className="blog-card"
+      onClick={onCardClick ? () => onCardClick(blog) : undefined}
+      style={onCardClick ? { cursor: "pointer" } : {}}
+    >
       <div className="blog-card-image">
         <img src={blog.image} alt={blog.title} />
-        <div className="blog-card-overlay">
-          <div className="blog-card-actions">
-            <button className="btn-edit" onClick={() => onEdit(blog)}>
-              <i className="fa fa-edit"></i> Sửa
-            </button>
-            <button className="btn-delete" onClick={handleDelete}>
-              <i className="fa fa-trash"></i> Xóa
-            </button>
+        {/* Ẩn lớp phủ overlay khi đang xem chi tiết ở admin */}
+        {!(isAdmin && isDetailOpen) && (
+          <div className="blog-card-overlay">
+            <div className="blog-card-actions">
+              <button
+                className="btn-edit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(blog);
+                }}
+              >
+                <i className="fa fa-edit"></i> {isAdmin ? "Xem" : "Sửa"}
+              </button>
+              <button
+                className="btn-delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete();
+                }}
+              >
+                <i className="fa fa-trash"></i> Xóa
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         <span className="blog-category">{getCategoryName(blog.category)}</span>
       </div>
 
