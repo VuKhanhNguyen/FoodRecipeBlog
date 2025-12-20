@@ -44,7 +44,7 @@ class RecipeService {
 
   // Lấy tất cả recipes
   async getAllRecipes() {
-    return this.fetchWithAuth(`${API_URL}/recipes`);
+    return this.fetchWithAuth(`${API_URL}/recipes/all`);
   }
 
   // Lấy recipe theo ID

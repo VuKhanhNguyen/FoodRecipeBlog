@@ -123,7 +123,11 @@ const Header = () => {
 
   const handleBlogManage = () => {
     setShowDropdown(false);
-    navigate("/blog-manage");
+    if (currentUser?.username === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/blog-manage");
+    }
   };
 
   const handleAuthorsClick = (e) => {

@@ -15,6 +15,7 @@ import SubmitBlogRecipePage from "./pages/SubmitBlogRecipePage.jsx";
 import BlogRecipeManagePage from "./pages/BlogRecipeManagePage.jsx";
 import AuthorsPage from "./pages/ListAuthorsPage.jsx";
 import RegisterPage from "./pages/RegisterPage";
+import AdminBlogManagePage from "./admin/adminPage.jsx";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
         <Route path="/blog-manage" element={<BlogRecipeManagePage />} />
         <Route path="/authors" element={<AuthorsPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/admin/blogs" element={<AdminBlogManagePage />} />
+        <Route path="/admin" element={<AdminBlogManagePage />} />
       </Routes>
     </Router>
   );
